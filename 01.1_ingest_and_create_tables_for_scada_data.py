@@ -1,3 +1,4 @@
+# TODO: wind turbine load capacity size
 # Databricks notebook source
 # MAGIC %md
 # MAGIC You may find this series of notebooks at https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction.git and more information about this solution accelerator at https://www.databricks.com/solutions/accelerators/......
@@ -38,7 +39,6 @@
 # MAGIC
 # MAGIC In this step, we will:
 # MAGIC   1. Setup notebook configuration
-# TODO: wind turbine load capacity size
 # MAGIC %run ./config/notebook_config
 
 # COMMAND ----------
@@ -59,7 +59,7 @@ unzip -o /Workspace/Repos/rnieder@newmathdata.com/dbsa_wind_turbine_load_predict
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## Step 3: Reinitiate database environment
+# MAGIC ## Step 3: Create Schema/Database
 
 # COMMAND ----------
 
@@ -75,18 +75,23 @@ spark.sql(f"USE {wind_turbine_load_prediction}")
 # MAGIC In this step, we will:
 # MAGIC   1. Create a permanent delta table (Bronze table for raw data)
 
-# COMMAND ----------
-
+# MAGIC
 # Access the Data File
 file_path = "/Workspace/Repos/rnieder@newmathdata.com/dbsa_wind_turbine_load_prediction/datasets/scada_data.zip"
 df_data_wind_farm = spark.read.csv(file_path, header=True, inferSchema=True)
 
 # Create a permanent delta table
-df_data_wind_farm.write.format("delta").mode("overwrite").saveAsTable("wind_farm_turkey_2018")
+df_data_wind_farm.write.format("delta").mode("overwrite").saveAsTable("scada_data")
+# MAGIC
 
+# MAGIC
+# COMMAND ----------
+
+# MAGIC
 # Verify the table has been created and Query the Table
 %sql
-SELECT * FROM your_table_name LIMIT 10
+SELECT * FROM scada_data LIMIT 10
 
+# MAGIC
 # COMMAND ----------
 
