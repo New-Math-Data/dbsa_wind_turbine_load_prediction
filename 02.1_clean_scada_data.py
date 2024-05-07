@@ -1,3 +1,4 @@
+# Databricks notebook source
 # MAGIC %md
 # MAGIC ## Step 1: Data transformation and cleaning, wrangling and normalizing
 # MAGIC
