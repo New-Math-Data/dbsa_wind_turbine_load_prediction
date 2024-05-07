@@ -52,9 +52,9 @@
 
 # COMMAND ----------
 
-# MAGIC %sh -e
-# MAGIC cd $tmpdir
-# MAGIC unzip -o /Workspace/Repos/rnieder@newmathdata.com/dbsa_wind_turbine_load_prediction/
+%sh -e
+cd $tmpdir
+unzip -o /Workspace/Repos/rnieder@newmathdata.com/dbsa_wind_turbine_load_prediction/datasets/scada_data.zip
 
 # COMMAND ----------
 
@@ -78,15 +78,15 @@ spark.sql(f"USE {wind_turbine_load_prediction}")
 # COMMAND ----------
 
 # Access the Data File
-# file_path = "/Workspace/Repos/rnieder@newmathdata.com/dbsa_wind_turbine_load_prediction/"
-# df_data_wind_farm = spark.read.csv(file_path, header=True, inferSchema=True)
+file_path = "/Workspace/Repos/rnieder@newmathdata.com/dbsa_wind_turbine_load_prediction/datasets/scada_data.zip"
+df_data_wind_farm = spark.read.csv(file_path, header=True, inferSchema=True)
 
 # Create a permanent delta table
-# df_data_wind_farm.write.format("delta").mode("overwrite").saveAsTable("wind_farm_turkey_2018")
+df_data_wind_farm.write.format("delta").mode("overwrite").saveAsTable("wind_farm_turkey_2018")
 
 # Verify the table has been created and Query the Table
-# %sql
-# SELECT * FROM your_table_name LIMIT 10
+%sql
+SELECT * FROM your_table_name LIMIT 10
 
 # COMMAND ----------
 
