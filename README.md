@@ -1,0 +1,2 @@
+# dbsa_wind_turbine_load_prediction
+Databricks Solution Accelerator Wind Turbine Power Forecasting
