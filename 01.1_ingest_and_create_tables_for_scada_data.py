@@ -12,7 +12,7 @@
 # Using public SCADA datasets that include theoretical power, produced active power, wind direction, wind speed, month and hour, generated turbine power is forecasted using machine learning algorithms.
 # MAGIC
 # MAGIC ** Authors**
-# MAGIC - Ramona Niederhausern  [<rnieder@newmathdata.com>]
+# MAGIC - Ona Niederhausern  [<rnieder@newmathdata.com>]
 # MAGIC - Traey Hatch [<thatch@newmathdata.com>]
 # MAGIC ___
 
@@ -53,7 +53,7 @@
 
 %sh -e
 cd $tmpdir
-unzip -o /Workspace/Repos/rnieder@newmathdata.com/dbsa_wind_turbine_load_prediction/datasets/scada_data.zip
+unzip -o /Workspace/Repos/rnieder@newmathdata.com/dbsa_wind_turbine_load_prediction/datasets/scada_data.csv.zip
 
 # COMMAND ----------
 
@@ -76,7 +76,7 @@ spark.sql(f"USE {wind_turbine_load_prediction}")
 
 # MAGIC
 # Access the Data File
-file_path = "/Workspace/Repos/rnieder@newmathdata.com/dbsa_wind_turbine_load_prediction/datasets/scada_data.zip"
+file_path = "/Workspace/Repos/rnieder@newmathdata.com/dbsa_wind_turbine_load_prediction/datasets/scada_data.csv"
 df_data_wind_farm = spark.read.csv(file_path, header=True, inferSchema=True)
 
 # Create a permanent delta table
