@@ -38,7 +38,7 @@
 # MAGIC
 # MAGIC In this step, we will:
 # MAGIC   1. Setup notebook configuration
-
+# TODO: wind turbine load capacity size
 # MAGIC %run ./config/notebook_config
 
 # COMMAND ----------
@@ -63,9 +63,9 @@
 
 # COMMAND ----------
 
-spark.sql(f"DROP DATABASE IF EXISTS {scada_data} CASCADE")
-spark.sql(f"CREATE DATABASE {scada_data}")
-spark.sql(f"USE {scada_data}")
+spark.sql(f"DROP DATABASE IF EXISTS {wind_turbine_load_prediction} CASCADE")
+spark.sql(f"CREATE DATABASE {wind_turbine_load_prediction}")
+spark.sql(f"USE {wind_turbine_load_prediction}")
 
 # COMMAND ----------
 
@@ -82,7 +82,7 @@ spark.sql(f"USE {scada_data}")
 # df_data_wind_farm = spark.read.csv(file_path, header=True, inferSchema=True)
 
 # Create a permanent delta table
-# df_data_wind_farm.write.format("delta").mode("overwrite").saveAsTable("scada_data")
+# df_data_wind_farm.write.format("delta").mode("overwrite").saveAsTable("wind_farm_turkey_2018")
 
 # Verify the table has been created and Query the Table
 # %sql
