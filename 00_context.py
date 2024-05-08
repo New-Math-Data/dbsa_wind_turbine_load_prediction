@@ -5,7 +5,6 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC
 # MAGIC <div >
 # MAGIC <assets src="./assets/NewMathDataLogo.png">
 # MAGIC </div>
@@ -20,43 +19,32 @@
 # MAGIC ** Authors**
 # MAGIC - Ramona Niederhausern  [<rnieder@newmathdata.com>]
 # MAGIC - Traey Hatch [<thatch@newmathdata.com>]
-# MAGIC ___
 
 # COMMAND ----------
 
-# MAGIC %md
-# MAGIC Copyright Databricks, Inc. [2022]. The source in this notebook is provided subject to the [Databricks License](https://databricks.com/db-license-source).  All included or referenced third party libraries are subject to the licenses set forth below.
 # MAGIC
-# MAGIC |Library Name|Library license | Library License URL | Library Source URL |
-# MAGIC |---|---|---|---|
-# MAGIC |Python|Python Software Foundation (PSF) |https://github.com/python/cpython/blob/master/LICENSE|https://github.com/python/cpython|
-# MAGIC |Spark|Apache-2.0 License |https://github.com/apache/spark/blob/master/LICENSE|https://github.com/apache/spark|
-
-# COMMAND ----------
-
-
-# MAGIC ## About This Series of Notebooks
-
 # MAGIC %md
+# MAGIC ## About This Series of Notebooks
 # MAGIC  * This series of notebooks is intended to help utility companies and wind farms correctly forecast the amount of load the farm can provide the utility.
 # MAGIC  * In support of this goal, we will:
-# MAGIC  * Load the SCADA data provided by each wind turbine, in the farm, into our training data from Kaggle at https://www.kaggle.com/datasets/berkerisen/wind-turbine-scada-dataset.
-# MAGIC  * Create a pipeline for streaming forecassted wind speed and direction in near real-time and/or on an ad-hoc basis. This pipeline can then be used for managing tables for reporting, ad hoc queries, and/or decision support.
-# MAGIC  * Use Databricks mlflow for built-in Machine Learning algorithms.
-# MAGIC  * Create a dashboard for monitoring the predicted supplied load.
+# MAGIC     * Load the SCADA data provided by each wind turbine, in the farm, into our training data from Kaggle at https://www.kaggle.com/datasets/berkerisen/wind-turbine-scada-dataset.
+# MAGIC     * Create a pipeline for streaming forecassted wind speed and direction in near real-time and/or on an ad-hoc basis. This pipeline can then be used for managing tables for reporting, ad hoc queries, and/or decision support.
+# MAGIC     * Use Databricks mlflow for built-in Machine Learning algorithms.
+# MAGIC     * Create a dashboard for monitoring the predicted supplied load.
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## About the Data
+# MAGIC ### Data used in this Solutions Accelerator
+# MAGIC   * Turkey wind farm dataset from Kaggle 
+# MAGIC   * Wind data from [INSERT]
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## Kaggle Dataset
+# MAGIC #### Kaggle Dataset
 # MAGIC
 # MAGIC * The dataset used in this accelerator is from Kaggle (https://www.kaggle.com/datasets/berkerisen/wind-turbine-scada-dataset).
-# MAGIC
 # MAGIC * Further details about this dataset
 # MAGIC   * Dataset title: Wind Turbine Scada Dataset
 # MAGIC     ^2018 Scada Data of a Wind Turbine in Turkey^
@@ -67,12 +55,14 @@
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC #### Wind Data
+# MAGIC   * Real time forecasted wind speed and direction is obtained from [INSERT]
+
+# COMMAND ----------
+
+# MAGIC %md
 # MAGIC Copyright Databricks, Inc. [2022]. The source in this notebook is provided subject to the [Databricks License](https://databricks.com/db-license-source).  All included or referenced third party libraries are subject to the licenses set forth below.
 # MAGIC |Library Name|Library license | Library License URL | Library Source URL |
 # MAGIC |---|---|---|---|
-# MAGIC |Spark-nlp|Apache-2.0 License| https://nlp.johnsnowlabs.com/license.html | https://www.johnsnowlabs.com/
-# MAGIC |Kaggle|Apache-2.0 License |https://github.com/Kaggle/kaggle-api/blob/master/LICENSE|https://github.com/Kaggle|
 # MAGIC |Python|Python Software Foundation (PSF) |https://github.com/python/cpython/blob/master/LICENSE|https://github.com/python/cpython|
 # MAGIC |Spark|Apache-2.0 License |https://github.com/apache/spark/blob/master/LICENSE|https://github.com/apache/spark|
-
-# COMMAND ----------
