@@ -13,7 +13,7 @@
 # MAGIC ** Authors**
 # MAGIC - Ona Niederhausern  [<rnieder@newmathdata.com>]
 # MAGIC - Traey Hatch [<thatch@newmathdata.com>]
-# MAGIC ___
+
 
 # COMMAND ----------
 

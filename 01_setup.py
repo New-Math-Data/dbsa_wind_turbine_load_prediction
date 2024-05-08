@@ -2,6 +2,8 @@
 # MAGIC %md
 # MAGIC You may find this series of notebooks at https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction.git and more information about this solution accelerator at https://www.databricks.com/solutions/accelerators/[INSERT]
 
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC ## Overview
 # MAGIC
@@ -12,9 +14,9 @@
 # MAGIC ** Authors**
 # MAGIC - Ona Niederhausern  [<rnieder@newmathdata.com>]
 # MAGIC - Traey Hatch [<thatch@newmathdata.com>]
-# MAGIC ___
 
 # COMMAND ----------
+
 # MAGIC %md
 # MAGIC ## Ingest Data
 # MAGIC
@@ -28,14 +30,15 @@
 # MAGIC
 # MAGIC In this step, we will:
 # MAGIC   1. Setup git repo configuration: (tutorial) https://partner-academy.databricks.com/learn/course/1266/play/7844/integrating-with-databricks-repos
-
+# MAGIC
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## Step 1: Configure the Environment
+# MAGIC ## Step 2: Configure the Environment
 # MAGIC
 # MAGIC In this step, we will:
 # MAGIC   2. Setup notebook configuration
+# MAGIC
 
 # COMMAND ----------
 
@@ -47,5 +50,4 @@ from pyspark.sql import SparkSession
 
 spark = SparkSession.builder.getOrCreate()
 
-# COMMAND ----------
 
