@@ -11,7 +11,7 @@
 # MAGIC </div >
 # MAGIC
 # MAGIC <div >
-# MAGIC <assets src="./assets/Logo_3x3_outlines.png">
+# MAGIC <img src="./assets/Logo_3x3_outlines.png">
 # MAGIC </div>
 # MAGIC
 # MAGIC %md
@@ -38,23 +38,31 @@
 
 # COMMAND ----------
 
+
+# MAGIC ## About This Series of Notebooks
+
 # MAGIC %md
 # MAGIC ## About This Series of Notebooks
 # MAGIC  * This series of notebooks is intended to help utility companies and wind farms correctly forecast the amount of load the farm can provide the utility.
 # MAGIC  * In support of this goal, we will:
-# MAGIC  * Load the SCADA data provided by each wind turbine, in the farm, into our training data from Kaggle at https://www.kaggle.com/datasets/berkerisen/wind-turbine-scada-dataset.
-# MAGIC  * Create a pipeline for streaming forecassted wind speed and direction in near real-time and/or on an ad-hoc basis. This pipeline can then be used for managing tables for reporting, ad hoc queries, and/or decision support.
-# MAGIC  * Use Databricks mlflow for built-in Machine Learning algorithms.
-# MAGIC  * Create a dashboard for monitoring the predicted supplied load.
+# MAGIC     * Load the SCADA data provided by each wind turbine, in the farm, into our training data from Kaggle at https://www.kaggle.com/datasets/berkerisen/wind-turbine-scada-dataset.
+# MAGIC     * Create a pipeline for streaming forecassted wind speed and direction in near real-time and/or on an ad-hoc basis. This pipeline can then be used for managing tables for reporting, ad hoc queries, and/or decision support.
+# MAGIC     * Use Databricks mlflow for built-in Machine Learning algorithms.
+# MAGIC     * Create a dashboard for monitoring the predicted supplied load.
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## About the Data
-# MAGIC ### Kaggle Dataset
+# MAGIC ### Data used in this Solutions Accelerator
+# MAGIC   * Turkey wind farm dataset from Kaggle
+# MAGIC   * Wind data from [INSERT]
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC #### Kaggle Dataset
 # MAGIC
 # MAGIC * The dataset used in this accelerator is from Kaggle (https://www.kaggle.com/datasets/berkerisen/wind-turbine-scada-dataset).
-# MAGIC
 # MAGIC * Further details about this dataset
 # MAGIC   * Dataset title: Wind Turbine Scada Dataset
 # MAGIC     ^2018 Scada Data of a Wind Turbine in Turkey^
@@ -62,6 +70,12 @@
 # MAGIC   * Dataset source description: BERK ERISEN added the dataset to Kaggle 5 year ago, the country Turkey provided a year, 2018, of SCADA data from a Wind Farm
 # MAGIC   * Dataset license: please see dataset source URL below
 # MAGIC
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC #### Wind Data
+# MAGIC   * Real time forecasted wind speed and direction is obtained from [INSERT]
+
 # COMMAND ----------
 
 # MAGIC %md

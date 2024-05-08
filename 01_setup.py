@@ -15,34 +15,29 @@
 # MAGIC - Ona Niederhausern  [<rnieder@newmathdata.com>]
 # MAGIC - Traey Hatch [<thatch@newmathdata.com>]
 
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ## Ingest Data
 # MAGIC
+# MAGIC %md
+# MAGIC ## Overview - Setup
 # MAGIC ### In this notebook you will:
-# MAGIC * Configure the Environment.
-
-# COMMAND ----------
+# MAGIC * Configure Databricks Repo GIT Environment
+# MAGIC * Configure the Solution Accelerator Environment
+# MAGIC
 
 # MAGIC %md
-# MAGIC ## Step 1: Configure Databricks Repo GIT Environment
+# MAGIC #### Step 1: Configure Databricks Repo GIT Environment
 # MAGIC
 # MAGIC In this step, we will:
 # MAGIC   1. Setup git repo configuration: (tutorial) https://partner-academy.databricks.com/learn/course/1266/play/7844/integrating-with-databricks-repos
 # MAGIC
-# COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## Step 2: Configure the Environment
+# MAGIC #### Step 2: Configure the Solution Accelerator Environment
 # MAGIC
 # MAGIC In this step, we will:
-# MAGIC   2. Setup notebook configuration
-# MAGIC
+# MAGIC   1. Install python packages
 
-# COMMAND ----------
 
-%pip install pyspark
+# MAGIC %pip install pyspark
 
 # COMMAND ----------
 
