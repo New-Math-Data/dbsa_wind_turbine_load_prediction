@@ -3,6 +3,8 @@
 # TODO: if maintenance delete from fit
 # TODO: make sure turbine make and model is of the same generator capacity
 # TODO: add DB Alert for when Wind Speed in greater or equal to 55
+# TODO: wind turbine load capacity size
+# TODO: make sure turbine make and model is of the same generator capacity
 
 # This is a sample Python script.
 

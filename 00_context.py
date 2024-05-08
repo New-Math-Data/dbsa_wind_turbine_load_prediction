@@ -5,8 +5,9 @@
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC
 # MAGIC <div >
-# MAGIC <img src="https:// NEW MATH DATA logo location ">
+# MAGIC <assets src="./assets/NewMathDataLogo.png">
 # MAGIC </div>
 # MAGIC
 # MAGIC
