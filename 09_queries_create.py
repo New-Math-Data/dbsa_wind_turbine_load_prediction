@@ -4,4 +4,4 @@
 # MAGIC Databricks SQL....
 # MAGIC
 # MAGIC ##### In this notebook you will:
-# MAGIC * Create a query to [INSERT] using Databricks SQL
+# MAGIC * Create a query to describe (moments of the statistics) the data using Databricks SQL
