@@ -1,7 +1,7 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC ### Overview - AutoML
-# MAGIC AutoML is....
+# MAGIC ### Overview - Create Delta Table of the weather data
+# MAGIC Delta Table is....
 # MAGIC
 # MAGIC ##### In this notebook you will:
 # MAGIC * Create .....

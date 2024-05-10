@@ -1,7 +1,7 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC ### Overview - AutoML
-# MAGIC AutoML is....
+# MAGIC ### Overview - Clean weather data
+# MAGIC Cleaning....
 # MAGIC
 # MAGIC ##### In this notebook you will:
 # MAGIC * Create .....
