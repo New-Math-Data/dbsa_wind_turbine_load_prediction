@@ -232,14 +232,15 @@ dbutils.data.summarize(df_wind_farm_bronze)
 # MAGIC
 # MAGIC In perpreation of creating our Silver table we will:
 # MAGIC
-# MAGIC * Remove the `lv_activepower_kw` values that are equal to and less than zero, this will include the negative values. 
+# MAGIC * Replace the `lv_activepower_kw` negative values with Zero. 
 # MAGIC * We will insert the interpolated values for `lv_activepower_kw` missing values. 
 
 # COMMAND ----------
 
-from pyspark.sql.functions import col
+from pyspark.sql.functions import col, when
 
-df_wind_farm_bronze = df_wind_farm_bronze.filter(col('lv_activepower_kw') > 0)
+# Replace negative values of lv_activepower_kw with zero
+df_wind_farm_bronze = df_wind_farm_bronze.withColumn("lv_activepower_kw", when(col("lv_activepower_kw") > 0, col("lv_activepower_kw")).otherwise(0))
 
 # Show the DataFrame
 display(df_wind_farm_bronze)
@@ -247,9 +248,13 @@ display(df_wind_farm_bronze)
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC Now that all the negative and zero values are removed from our dataset, notice that produced power (`lv_activepower_kw`) sometimes produces low power when wind speeds are above 3 meters per second and other times produces high power when wind speeds are less that 3 meters per second. Let's making a graph visulization by plotting all out datapoints.
+# MAGIC Now that all the negative values are removed from our dataset, notice that produced power (`lv_activepower_kw`) sometimes produces low power when wind speeds are above 3 meters per second and other times produces high power when wind speeds are less that 3 meters per second. Let's making a graph visulization by plotting all out datapoints.
 # MAGIC
 # MAGIC The Independent Axis as our wind speed and our Dependent Axis is our produced power (`lv_activepower_kw`).
+
+# COMMAND ----------
+
+dbutils.data.summarize(df_wind_farm_bronze)
 
 # COMMAND ----------
 
