@@ -64,13 +64,7 @@ display(df_wind_farm_bronze)
 
 # COMMAND ----------
 
-from pyspark.sql import SparkSession
 from pyspark.sql.functions import min as spark_min, max as spark_max, expr
-
-# Create a SparkSession
-spark = SparkSession.builder \
-    .appName("BoxplotStats") \
-    .getOrCreate()
 
 # Calculate boxplot statistics
 boxplot_stats = spark.table("wind_turbine_load_prediction.scada_data_bronze") \
@@ -110,13 +104,7 @@ boxplot_stats.show()
 
 # COMMAND ----------
 
-from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, explode, histogram_numeric
-
-# Create a SparkSession
-spark = SparkSession.builder \
-    .appName("Histogram") \
-    .getOrCreate()
 
 # Load the scada_data_bronze DataFrame and select lv_activepower_kw column
 lv = spark.table("wind_turbine_load_prediction.scada_data_bronze").select("lv_activepower_kw")
