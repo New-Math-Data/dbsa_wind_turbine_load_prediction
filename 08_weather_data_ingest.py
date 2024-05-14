@@ -66,9 +66,3 @@ display(data)
 # Watch out when you convert from a dictionary to text (response.text), specaial characters are converted to ascii code  
 # jsonstring = json.dumps(data, indent=3)
 # display(jsonstring)
-
-# COMMAND ----------
-
-# TODO: find a way to use Spark to capture the curl command
-%sh -e
-curl --request GET --url 'https://api.tomorrow.io/v4/weather/forecast?location=yalova&apikey=IOZMradsVxtAUVc63OAjbfeo7v9WmRUp'

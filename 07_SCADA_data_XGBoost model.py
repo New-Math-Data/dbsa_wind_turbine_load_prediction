@@ -5,9 +5,10 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ### Overview - Visualizations
+# MAGIC ### Overview - XGBoost
 # MAGIC
-# MAGIC Databricks visualizations are ...
+# MAGIC Gradient Boosted Trees are an excelent tool to predict produced power from the turbines. Databricks Runtime ML has Distributed XGBoost already installed.
 # MAGIC
 # MAGIC ##### In this notebook you will:
-# MAGIC * Create...
+# MAGIC * Create a XGBoost model and integrate it into Spark ML pipeline
+# MAGIC * Evaluate XGBoost model for accuracy 
