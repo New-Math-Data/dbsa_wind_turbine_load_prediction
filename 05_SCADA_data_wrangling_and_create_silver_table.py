@@ -11,7 +11,7 @@
 # MAGIC In perpreation of creating our Silver table we will:
 # MAGIC
 # MAGIC * When the speed of wind is below the wind turbine's cut-in-speed, the turbine should produce zero active power, we will replace the wind turbine output power (`lv_activepower_kw`) values with Zero.
-# MAGIC * We the active power is more than the wind turbine's installed capacity, the rated installed capacity value is utilized instead.
+# MAGIC * When the active power is more than the wind turbine's installed capacity, the rated installed capacity value is utilized instead.
 # MAGIC * We will replace the `lv_activepower_kw` negative values with Zero. 
 # MAGIC * We will use linear interpolation to insert the interpolated values for `lv_activepower_kw`'s missing values. 
 
@@ -28,21 +28,23 @@ display(df_wind_farm_bronze)
 from pyspark.sql.functions import col, when
 
 # Replace negative values of lv_activepower_kw with zero
-df_wind_farm_bronze = df_wind_farm_bronze.withColumn("lv_activepower_kw", when(df_wind_farm_bronze["lv_activepower_kw"] < 0, 0).otherwise(df_wind_farm_bronze["lv_activepower_kw"]))
+df_replaced_neg_values = df_wind_farm_bronze.withColumn("lv_activepower_kw", when(df_wind_farm_bronze["lv_activepower_kw"] < 0, 0).otherwise(df_wind_farm_bronze["lv_activepower_kw"]))
 
 # Show the DataFrame
-display(df_wind_farm_bronze)
+display(df_replaced_neg_values)
 
 # COMMAND ----------
 
-dbutils.data.summarize(df_wind_farm_bronze)
+dbutils.data.summarize(df_replaced_neg_values)
 
 # COMMAND ----------
 
 from pyspark.sql.functions import col, when
 
-# Replace negative values of lv_activepower_kw with zero
-df_wind_farm_bronze = df_wind_farm_bronze.withColumn("lv_activepower_kw", when(df_wind_farm_bronze["lv_activepower_kw"] > 4000, 4000).otherwise(df_wind_farm_bronze["lv_activepower_kw"])) 
+# When the active power is more than the wind turbine's installed capacity, the rated installed capacity value is utilized instead
+
+# Observing the maximum wind speed, it's evident that our data does not reach the 4MW maximum rated capacity
+df_replaced_above_capacity = df_replaced_neg_values.withColumn("lv_activepower_kw", when(df_replaced_neg_values["lv_activepower_kw"] > 4000, 4000).otherwise(df_replaced_neg_values["lv_activepower_kw"])) 
 
 
 # Show the DataFrame
@@ -55,7 +57,7 @@ display(df_wind_farm_bronze)
 
 # COMMAND ----------
 
-dbutils.data.summarize(df_wind_farm_bronze)
+dbutils.data.summarize(df_replaced_above_capacity)
 
 # COMMAND ----------
 
@@ -64,12 +66,12 @@ from pyspark.ml.feature import Imputer
 from pyspark.sql.window import Window
 
 # Convert datetime string to timestamp type
-df_wind_farm_bronze = df_wind_farm_bronze.withColumn("datetime", to_timestamp("datetime", format="dd MM yyyy HH:mm"))
+df_convert_datatime_to_timestamp = df_replaced_above_capacity.withColumn("datetime", to_timestamp("datetime", format="dd MM yyyy HH:mm"))
 
 # Convert timestamp string to unix_timestamp type
-df_wind_farm_cleanup_epoch = df_wind_farm_bronze.withColumn("datetime_epoch", unix_timestamp("datetime"))
+df_convert_timestamp_to_epoch = df_convert_datatime_to_timestamp.withColumn("datetime_epoch", unix_timestamp("datetime"))
 
-display(df_wind_farm_cleanup_epoch)
+display(df_convert_timestamp_to_epoch)
 
 # COMMAND ----------
 
@@ -98,35 +100,35 @@ from pyspark.sql.window import Window
 # Fill in missing timestamps(datetimes) 
 
 # Ensure DataFrame is sorted by time
-df_wind_farm_cleanup_epoch = df_wind_farm_cleanup_epoch.orderBy("datetime_epoch")
+df_timestamp_sort = df_convert_timestamp_to_epoch.orderBy("datetime_epoch")
 
 #df_wind_farm_cleanup_epoch.show()
 
 # Here we want to fill in missing values for every 10 minutes (600 seconds)
-min_timestamp = df_wind_farm_cleanup_epoch.selectExpr("min(datetime_epoch) as min_datatime_epoch").first()[0]
-max_timestamp = df_wind_farm_cleanup_epoch.selectExpr("max(datetime_epoch) as max_datatime_epoch").first()[0]
+min_timestamp = df_timestamp_sort.selectExpr("min(datetime_epoch) as min_datatime_epoch").first()[0]
+max_timestamp = df_timestamp_sort.selectExpr("max(datetime_epoch) as max_datatime_epoch").first()[0]
 
 all_timestamps = spark.range(min_timestamp, max_timestamp, step=600).select(col("id").alias("timestamp"))
 
 display(all_timestamps)
 
 # Left join with original DataFrame to ensure all timestamps are present
-df_wind_farm_cleanup_epoch_joined = all_timestamps.join(df_wind_farm_cleanup_epoch,df_wind_farm_cleanup_epoch["datetime_epoch"] == all_timestamps["timestamp"], "left")
+df_all_timestamps = all_timestamps.join(df_timestamp_sort, df_timestamp_sort["datetime_epoch"] == all_timestamps["timestamp"], "left")
 
 # Show the result
-display(df_wind_farm_cleanup_epoch_joined)
+display(df_all_timestamps)
 
 # COMMAND ----------
 
 
 # Let's drop `datetime_epoch`
-df_wind_farm_cleanup_epoch_joined = df_wind_farm_cleanup_epoch_joined.drop("datetime_epoch")
+df_datetime_epoch_drop = df_all_timestamps.drop("datetime_epoch")
 
 # Calculate the missing datetimes using the new epoch timestamp column
-df_wind_farm_cleanup_epoch_dt = df_wind_farm_cleanup_epoch_joined.withColumn("datetime",when(df_wind_farm_cleanup_epoch_joined['datetime'].isNull(), from_unixtime(df_wind_farm_cleanup_epoch_joined['timestamp'])).otherwise(df_wind_farm_cleanup_epoch_joined['datetime']))
+df_added_missing_datetimes = df_datetime_epoch_drop.withColumn("datetime",when(df_datetime_epoch_drop['datetime'].isNull(), from_unixtime(df_datetime_epoch_drop['timestamp'])).otherwise(df_datetime_epoch_drop['datetime']))
 
 
-display(df_wind_farm_cleanup_epoch_dt)
+display(df_added_missing_datetimes)
 
 # COMMAND ----------
 
@@ -150,10 +152,10 @@ from pyspark.ml.feature import Imputer
 imputer = Imputer(strategy="median", inputCols=['lv_activepower_kw', 'wind_speed_ms', 'wind_direction', 'theoretical_power_curve_kwh'], outputCols=['lv_activepower_kw', 'wind_speed_ms', 'wind_direction', 'theoretical_power_curve_kwh'])
 
 # Fit the Imputer to the data
-imputer_model = imputer.fit(df_wind_farm_cleanup_epoch_dt)
+imputer_model = imputer.fit(df_added_missing_datetimes)
 
 # Transform the data to impute missing values
-df_imputed = imputer_model.transform(df_wind_farm_cleanup_epoch_dt)
+df_imputed = imputer_model.transform(df_added_missing_datetimes)
 
 display(df_imputed)
 

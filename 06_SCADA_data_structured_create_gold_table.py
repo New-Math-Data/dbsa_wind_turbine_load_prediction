@@ -8,6 +8,8 @@
 # MAGIC ### Overview - Create Structured Gold Table
 # MAGIC Gold tables have a well-defined schema that accurately represents the data. Our data needs to adheres to predefined conventional datapoint standards.
 # MAGIC
+# MAGIC Despite our awareness that the turbine usually doesn't operate when the wind speed is below 3 meters per second (the estimated manufacturer cut-in speed) or exceeds 25 meters per second, we'll exclude these values from the table for model fitting purposes.
+# MAGIC
 # MAGIC ##### In this notebook you will:
 # MAGIC * Define datapoints to have a wind speed between 3 meters per second and 25 meters per second.
 
@@ -21,21 +23,33 @@ display(df_scada_data_silver)
 
 # COMMAND ----------
 
-# MAGIC %md
-# MAGIC ##### We wont be using `theoretical_power_curve_kwh` so lets remove it from our gold table, also let's remove defined datapoints where wind speed is less than 3 meters per second (the estimated manufacture cut-in speed) and greater than 25 meters per second.
+from pyspark.sql.functions import col, window, sum, avg
+
+# Sum by hour to do the association with the forecasted weather, which is hourly
+
+# Group data into hourly windows and calculate the sum of lv_activepower_kw
+df_hourly = df_scada_data_silver.groupBy(window("datetime", "1 hour")).agg(
+    sum("lv_activepower_kw").alias("lv_activepower_kw_hourly_sum"),
+    avg("wind_speed_ms").alias("wind_speed_ms_hourly_avg"))
+
+# We'll filter out data points where the wind speed is below 3 meters per second (the estimated manufacturer cut-in speed) and above 25 meters per second, which is the shutdown speed.
+
+# If we do not filter these values, then we will get negative prediction values in times when lv_activepower_kw is zero.
+
+df_hourly_speeds_filtered = df_hourly.filter(
+        (df_hourly["wind_speed_ms_hourly_avg"] >= 3) &
+        (df_hourly["wind_speed_ms_hourly_avg"] <= 25)
+    )  
+
+# Show the result
+df_hourly.show(truncate=False)
+
+display(df_hourly)
+
 
 # COMMAND ----------
 
-from pyspark.sql.functions import col
-
-df_scada_data_silver = df_scada_data_silver.drop("theoretical_power_curve_kwh")
-
-df_scada_data_silver = df_scada_data_silver.drop("datetime")
-
-df_scada_data_silver = df_scada_data_silver.filter((col("wind_speed_ms") >= 3.0) & (col("wind_speed_ms") <= 25.0))
-
-display(df_scada_data_silver)
-
+dbutils.data.summarize(df_hourly)
 
 # COMMAND ----------
 
@@ -44,11 +58,11 @@ import seaborn as sns
 from pyspark.sql.functions import col
 
 # Make a new DataFrame to plot the graph
-df = df_scada_data_silver.withColumn('wind_speed_ms', col('wind_speed_ms'))
+df = df_hourly.withColumn('wind_speed_ms_hourly_sum', col('wind_speed_ms_hourly_avg'))
 
 # Plot wind speed vs. produced power
-plt.figure(figsize=(20, 10))
-sns.scatterplot(x='wind_speed_ms', y='lv_activepower_kw', data=df.toPandas())
+plt.figure(figsize=(10, 5))
+sns.scatterplot(x='wind_speed_ms_hourly_avg', y='lv_activepower_kw_hourly_sum', data=df.toPandas())
 plt.title('Wind Speed vs. Produced Power')
 plt.xlabel('Wind Speed (m/s)')
 plt.ylabel('Produced Power (kW)')
@@ -70,8 +84,14 @@ plt.show()
 # Create a permanent delta table (Gold table (high quality structured data) by converting the Spark DataFrame we created eariler to a Delta Table
 spark.sql(f"USE wind_turbine_load_prediction")
 
+# While the theoretical_power_curve_kwh is useful for comparing against forecasted values, it's not required for our model
+
+# Now that we've generated a linear datetime using epoch timestamps to address missing data, the timestamp column is no longer needed
+
+# Now that we have lv_activepower_kw hourly, the lv_activepower_kw column is no longer needed
+
 # Overide the table and register with the new DataFrame as a Delta table in the metastore 
-df_scada_data_silver.write.format("delta").mode("overwrite").saveAsTable("scada_data_gold")
+df_hourly.write.format("delta").mode("overwrite").saveAsTable("scada_data_gold")
 
 print("Table 'scada_data_gold' exists.")
 

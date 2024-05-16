@@ -16,7 +16,7 @@
 
 # MAGIC %md
 # MAGIC ##### Configure Databricks Repo GIT Environment
-# MAGIC Setup git repo configuration: (tutorial) https://partner-academy.databricks.com/learn/course/1266/play/7844/integrating-with-databricks-repos
+# MAGIC Set up git repo configuration using the tutorial provided here: https://partner-academy.databricks.com/learn/course/1266/play/7844/integrating-with-databricks-repos
 
 # COMMAND ----------
 

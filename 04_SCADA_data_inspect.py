@@ -15,10 +15,10 @@
 # COMMAND ----------
 
 # Create a temporary DataFrame for data cleaning purposes
-df_wind_farm_cleanup = spark.sql("""SELECT * FROM wind_turbine_load_prediction.scada_data_bronze""")
+df_wind_farm_bronze = spark.sql("""SELECT * FROM wind_turbine_load_prediction.scada_data_bronze""")
 
 # Show the DataFrame
-display(df_wind_farm_cleanup)
+display(df_wind_farm_bronze)
 
 # COMMAND ----------
 
@@ -128,7 +128,7 @@ boxplot_stats.show()
 
 # COMMAND ----------
 
-dbutils.data.summarize(df_wind_farm_cleanup)
+dbutils.data.summarize(df_wind_farm_bronze)
 
 # COMMAND ----------
 
@@ -203,7 +203,7 @@ from pyspark.sql.functions import col
 import seaborn as sns
 
 # Make a new DataFrame to plot the graph
-df = df_wind_farm_cleanup.withColumn('wind_speed_ms', col('wind_speed_ms'))
+df = df_wind_farm_bronze.withColumn('wind_speed_ms', col('wind_speed_ms'))
 
 # Plot wind speed vs. produced power
 plt.figure(figsize=(10, 6))
