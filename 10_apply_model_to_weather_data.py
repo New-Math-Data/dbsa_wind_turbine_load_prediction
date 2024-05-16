@@ -19,8 +19,8 @@
 
 from pyspark.sql.functions import from_unixtime
 
-df_forecasted_dt = df_forecasted.withColumn("datetime", from_unixtime(df_forecasted["timestamp"]))
-df_infer = vec_assembler.transform(df_forecasted_dt)
+
+df_infer = vec_assembler.transform(df_forecasted)
 # display(df_infer)
 
 # Apply trained linear regression model to make predictions

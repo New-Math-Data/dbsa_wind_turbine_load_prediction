@@ -22,7 +22,8 @@
 # COMMAND ----------
 
 # Create DataFrame
-df_scada_data_gold = spark.sql("""SELECT * FROM wind_turbine_load_prediction.scada_data_gold""")
+
+df_scada_data_gold = spark.sql("""SELECT lv_activepower_kw_hourly_sum, wind_speed_ms_hourly_avg FROM wind_turbine_load_prediction.scada_data_gold""")
 
 # Confirm DataFrame creation
 display(df_scada_data_gold)
@@ -41,7 +42,7 @@ print(df_train.cache().count())
 
 # COMMAND ----------
 
-display(df_train.select("lv_activepower_kw", "wind_speed_ms", "wind_direction").summary())
+display(df_train.select("lv_activepower_kw_hourly_sum", "wind_speed_ms_hourly_avg").summary())
 
 # COMMAND ----------
 
@@ -56,11 +57,11 @@ from pyspark.sql.functions import col
 
 # If there are null values in the dataset, the VectorAssembler will encounter an error when trying to assemble the features: handleInvalid=["keep/skip"], `skip` will skip these null values, however, ideally the null values are handled by interpotation in the clean up (Silver) data stage." 
 
-vec_assembler = VectorAssembler(inputCols=['wind_speed_ms','wind_direction'], outputCol='features', handleInvalid="keep")
+vec_assembler = VectorAssembler(inputCols=['wind_speed_ms_hourly_avg'], outputCol='features', handleInvalid="keep")
 
 df_train_vector = vec_assembler.transform(df_train)
 
-df_trained_data = df_train_vector.withColumn('label', col('lv_activepower_kw')).select('features','label')
+df_trained_data = df_train_vector.withColumn('label', col('lv_activepower_kw_hourly_sum')).select('features','label')
 display(df_trained_data)
 
 lr = LinearRegression(featuresCol='features', labelCol='label')
@@ -84,15 +85,15 @@ from pyspark.ml.evaluation import RegressionEvaluator
 from pyspark.sql.functions import avg, col
 
 df_test_vector = vec_assembler.transform(df_test)
-df_test_vec = df_test_vector.withColumn('label', col('lv_activepower_kw')).select('features','label')
+df_test_vec = df_test_vector.withColumn('label', col('lv_activepower_kw_hourly_sum')).select('features','label')
 display(df_test_vec)
 
 df_pred = lr_model.transform(df_test_vec)
 display(df_pred)
 
 # Calculate the average of the "label" column in the DataFrame with predictions
-average_label_pred = df_pred.agg(avg(col("label"))).collect()[0][0]
-print("Average label with predictions:", average_label_pred)
+df_average_label_pred = df_pred.agg(avg(col("label"))).collect()[0][0]
+print("Average label with predictions:", df_average_label_pred)
 
 regression_evaluator = RegressionEvaluator(predictionCol="prediction", labelCol="label", metricName="rmse")
 

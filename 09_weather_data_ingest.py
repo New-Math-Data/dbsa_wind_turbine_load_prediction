@@ -42,11 +42,12 @@ print(forecasted_weather_data.keys())
 # Access windspeed and winddir for 15 forecasted days
 forecasted_data: [] = []
 for day in forecasted_weather_data["days"]:
-    forecasted_data.append({ "wind_direction": day["winddir"], "wind_speed_ms": day["windspeed"], "timestamp": day["datetimeEpoch"]} )
+    for hour in day["hours"]:
+        forecasted_data.append({ "wind_speed_ms_hourly_avg": hour["windspeed"], "timestamp": hour["datetimeEpoch"]} )
 
-# display(forecasted_data)
+display(forecasted_data)
 
-df_forecasted = spark.createDataFrame(forecasted_data)
+df_forecasted = spark.createDataFrame(forecasted_data).select("wind_speed_ms_hourly_avg")
 display(df_forecasted)
 
 
