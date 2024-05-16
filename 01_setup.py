@@ -1,6 +1,6 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC You may find this series of notebooks at https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction.git and more information about this solution accelerator at https://www.databricks.com/solutions/accelerators/[INSERT]
+# MAGIC You may find this series of notebooks at https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction.git
 
 # COMMAND ----------
 
@@ -9,7 +9,7 @@
 # MAGIC ##### In this notebook you will:
 # MAGIC * Configure Databricks Repo GIT Environment
 # MAGIC * Configure the Solution Accelerator Environment
-# MAGIC * About Databricks and the pyspark Session
+# MAGIC * About Databricks and the PySpark Session
 # MAGIC
 
 # COMMAND ----------
@@ -22,22 +22,18 @@
 
 # MAGIC %md
 # MAGIC ##### Configure the Solution Accelerator Environment
-
-# COMMAND ----------
-
-# Install needed python packages
-%pip install pyspark
-%pip install requests
+# MAGIC All python packages needed for this Solution Accelerator are pre-installed in the Databricks environment
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ##### About Databricks and the pyspark Session
+# MAGIC ##### About Databricks and the PyDpark Session
+# MAGIC
+# MAGIC PySpark is pre-installed in Databricks notebook.
+# MAGIC
 # MAGIC The **`SparkSession`** class is the single entry point to all functionality in Spark using the DataFrame API.
 # MAGIC
-# MAGIC In Databricks notebooks, the SparkSession is created for you, and stored in the variable `spark`:
+# MAGIC In Databricks notebooks, the SparkSession is created for you (spark = SparkSession.builder.getOrCreate()), and stored in the variable `spark`.
 # MAGIC
-# MAGIC spark = SparkSession.builder.getOrCreate()
-# MAGIC
-# MAGIC We will use this `spark` object through this DB Wind Turbine Load Prediction Solution Accelerator
+# MAGIC In this Databricks Wind Turbine Load Prediction Solution Accelerator notebook, ee will use the `spark` object to create DataFrames, register DataFrames as tables and execute SQL queries.
 # MAGIC

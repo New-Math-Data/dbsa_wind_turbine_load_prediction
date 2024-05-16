@@ -1,46 +1,38 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC You may find this series of notebooks at https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction.git and more information about this solution accelerator at https://www.databricks.com/solutions/accelerators/[INSERT]
+# MAGIC You may find this series of notebooks at https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction.git 
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ### Overview - Ingest SCADA Data - SCADA data collection and dataset analysis
-# MAGIC Wind turbines have eletronic devices attached to them with SCADA software, these devices are remotely connected to the SCADA system. The SCADA system collects data about the turbine on a continuous basis. The collected data includes details such as produced power, direction and speed of wind, and date and time. 
+# MAGIC ### Overview - SCADA Data Ingestion and Dataset Analysis
 # MAGIC
-# MAGIC Predicting forecasted power of wind turbines can help wind farm's make decisions regarding produced power, consumption and management of storage-capacity.
+# MAGIC Wind turbines are equipped with electronic devices that are integrated with SCADA software. These devices establish remote connections to the SCADA system, enabling continuous data collection about the turbines. This data encompasses various details, including generated power, wind direction and speed, as well as date and time stamps.
 # MAGIC
-# MAGIC During the time period January 1, 2018 to December 31, 2018, the SCADA dataset holds a total of 50,530 data points. A datapoint is formed every 10 minutes of measurements of Wind Speed, Active Power (`lv_activepower_kw`), Theoretical Power and Wind Direction.
+# MAGIC Forecasting the power output of wind turbines plays a pivotal role in assisting wind farms in decision-making processes related to power production, consumption, and storage capacity management.
+# MAGIC
+# MAGIC During the time period between January 1, 2018 and December 31, 2018, the SCADA dataset encompasses a total of 50,530 data points. Each data point is generated every 10 minutes and contains measurements for Wind Speed, Active Power (`lv_activepower_kw`), Theoretical Power (`theoretical_power_curve_kwh`), and Wind Direction.
 # MAGIC
 # MAGIC ##### In this notebook you will:
 # MAGIC * Access the SCADA dataset from Databricks Repo and unzip.
 # MAGIC * Read the data to a DataFrame in `Delta` format for easy access and queriability.
-# MAGIC * Explore the dataset and relationships for any needed future cleaning/wrangling/normalizing.
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ##### Download the SCADA dataset from Databricks Repo and unzip.
 
 # COMMAND ----------
 
 # MAGIC %sh -e
-# MAGIC # move into the datasets directory
-# MAGIC # watch out, know that this tmp directory is in your workspace, not in root tmp, we will handle this later when we read the file
+# MAGIC # Access the SCADA dataset from Databricks Repo and unzip
+# MAGIC
+# MAGIC # Note: The tmp directory is located in your workspace, not the root tmp directory. We will address this when reading the file.
 # MAGIC cd /tmp
-# MAGIC # Access the zipped SCADA dataset from Databricks Repo and unzip the dataset file
+# MAGIC
+# MAGIC # Navigate to the datasets directory to access the zipped SCADA dataset from the Databricks Repo and unzip the dataset file
 # MAGIC unzip -o /Workspace/Repos/rnieder@newmathdata.com/dbsa_wind_turbine_load_prediction/datasets/scada_data.csv.zip
 # MAGIC
-# MAGIC # make sure the file was unzipped by listing the files in the datasets directory
+# MAGIC # Verify that the file was unzipped by listing the files in the datasets directory
 # MAGIC ls 
 # MAGIC
+# MAGIC # Display the current working directory, you should see a `.csv` file
 # MAGIC pwd
-# MAGIC # run code block, you should see a `.csv` file
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ##### Read the SCADA data to a DataFrame in `Delta` format for easy access and queriability. Data will be in `Delta Lake`
 # MAGIC
 
 # COMMAND ----------
@@ -49,10 +41,12 @@ import os
 from pathlib import Path
 import platform
 
-# Get the path of the temporary directory, this will be the `/tmp` directory in your workspace, not the systems environment
-file_path = f"file:///tmp/scada_data.csv"
-print(f"file_path:::{file_path}")
+# Load the data into a DataFrame in the Delta format for seamless access and queryability
 
-# Read the dataset into the session storage. In Databricks notebooks, the SparkSession is created for you, and stored in the variable `spark`.
+# Retrieve the path of the temporary directory, this is the `/tmp` directory within your workspace, not the system's environment
+file_path = f"file:///tmp/scada_data.csv"
+print(f"File Path: {file_path}")
+
+# Read the dataset into the session storage. In Databricks notebooks, the SparkSession is automatically created and stored in the variable `spark`.
 df_wind_farm_raw = spark.read.csv(file_path, header=True, inferSchema=True, multiLine="true", escape='"')
 

@@ -1,16 +1,12 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC You may find this series of notebooks at https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction.git and more information about this solution accelerator at https://www.databricks.com/solutions/accelerators/[INSERT PATH]
+# MAGIC You may find this series of notebooks at https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction.git
 
 # COMMAND ----------
 
 # MAGIC %md
 # MAGIC <div >
-# MAGIC <img src="./assets/NewMathDataLogo.png">
-# MAGIC </div>
-# MAGIC
-# MAGIC <div >
-# MAGIC <img src="./assets/Logo_3x3_outlines.png">
+# MAGIC   <img src="/Workspace/Repos/rnieder@newmathdata.com/dbsa_wind_turbine_load_prediction/assets/Logo_3x3_outlines.png">
 # MAGIC </div>
 # MAGIC
 # MAGIC ### Overview
@@ -51,6 +47,8 @@
 # MAGIC ###### Wind Data
 # MAGIC   * Real time forecasted wind speed and direction is obtained from Weatherstack. Tomorrow.ai offers current weather data, forecasts, and historical weather data, (-7 days to 7 days). They have a free plan with limited features. https://docs.tomorrow.io/reference/intro/getting-started
 # MAGIC
+# MAGIC ##### Assumptions
+# MAGIC * Turbine was not under maintenance on any given day and time
 # MAGIC
 # MAGIC **Authors**
 # MAGIC - Ramona Niederhausern  [<rnieder@newmathdata.com>]
