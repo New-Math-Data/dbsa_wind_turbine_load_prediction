@@ -5,7 +5,7 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ### Overview - Remove Invalid Characters from the DataFrame and Create Bronze Delta Table
+# MAGIC ### Overview - Remove Invalid Characters from the header and Create Bronze Delta Table
 # MAGIC
 # MAGIC ##### In this notebook, we will:
 # MAGIC   * Clean the DataFrame by removing invalid characters from the header

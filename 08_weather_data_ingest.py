@@ -11,6 +11,25 @@
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC ##### Let's adhere to best practices by securely storing our API Key using the Databricks Secrets utility
+
+# COMMAND ----------
+
+# MAGIC %sh databricks secrets put --scope forecasted_weather_data --key --"5MKDL5XX9XK4RGDWC4B5MJQXE"
+
+# COMMAND ----------
+
+# Read secret from the secret scope
+secret_value = dbutils.secrets.get(scope="forecasted_weather_data", key="key")
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ##### Retrieve the forecasted weather data for the turbine's location, Yalova, Turkey
+
+# COMMAND ----------
+
 import urllib.request
 import sys
 import json
@@ -18,10 +37,12 @@ import json
 # Ingest forecasted weather data                
 try:
   # Forcasted 15 days of weather data
-  ResultBytes = urllib.request.urlopen("https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/yalova%2C%20turkey?unitGroup=metric&include=days%2Chours&key=5MKDL5XX9XK4RGDWC4B5MJQXE&contentType=json")
+  # weather_results_bytes = urllib.request.urlopen("https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/yalova%2C%20turkey?unitGroup=metric&include=days%2Chours&key=5MKDL5XX9XK4RGDWC4B5MJQXE&contentType=json")
+
+  weather_results_bytes = urllib.request.urlopen("https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/yalova%2C%20turkey?unitGroup=metric&include=days%2Chours&key=secret_value&contentType=json")
 
   # Parse the results as JSON
-  forecasted_weather_data = json.load(ResultBytes)
+  forecasted_weather_data = json.load(weather_results_bytes)
   print(f"jsonData:::{json.dumps(forecasted_weather_data, indent=3)}")
 
 except urllib.error.HTTPError  as e:
@@ -49,8 +70,4 @@ display(forecasted_data)
 
 df_forecasted = spark.createDataFrame(forecasted_data).select("wind_speed_ms_hourly_avg")
 display(df_forecasted)
-
-
-# COMMAND ----------
-
 

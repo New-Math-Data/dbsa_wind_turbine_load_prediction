@@ -26,7 +26,7 @@
 # MAGIC cd /tmp
 # MAGIC
 # MAGIC # Navigate to the datasets directory to access the zipped SCADA dataset from the Databricks Repo and unzip the dataset file
-# MAGIC unzip -o /Workspace/Repos/rnieder@newmathdata.com/dbsa_wind_turbine_load_prediction/datasets/scada_data.csv.zip
+# MAGIC unzip -o https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction/blob/main/datasets/scada_data.csv.zip
 # MAGIC
 # MAGIC # Verify that the file was unzipped by listing the files in the datasets directory
 # MAGIC ls 

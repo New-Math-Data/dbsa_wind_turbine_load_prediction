@@ -133,7 +133,7 @@ display(df_added_missing_datetimes)
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ##### Databrick's ML API Transformer and Estimator can do the linear interpolation for us
+# MAGIC ##### Databrick's ML API Transformer and Estimator classes can do the linear interpolation for us
 # MAGIC
 # MAGIC Transformer: Transforms one DataFrame into another DataFrame. It accepts a DataFrame as input, and returns a new DataFrame with one or more columns appended to it. Transformers do not learn any parameters from your data and simply apply rule-based transformations. It has a .transform() method.
 # MAGIC

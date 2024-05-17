@@ -27,6 +27,29 @@
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC ##### Check the version of your default installation of the CLI
+
+# COMMAND ----------
+
+# MAGIC %sh databricks -v
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC Databricks CLI versions 0.18 and below is the “legacy” CLI. If your version is legacy, we need to update the Databricks CLI by first uninstalling the legacy version
+
+# COMMAND ----------
+
+# MAGIC %sh
+# MAGIC curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+
+# COMMAND ----------
+
+
+
+# COMMAND ----------
+
+# MAGIC %md
 # MAGIC ##### About Databricks and the PyDpark Session
 # MAGIC
 # MAGIC PySpark is pre-installed in Databricks notebook.

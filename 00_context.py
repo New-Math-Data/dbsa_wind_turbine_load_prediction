@@ -5,9 +5,11 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC <div >
-# MAGIC   <img src="/Workspace/Repos/rnieder@newmathdata.com/dbsa_wind_turbine_load_prediction/assets/Logo_3x3_outlines.png">
-# MAGIC </div>
+# MAGIC
+# MAGIC ![New Math Data Logo](https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction/blob/main/assets/Logo_3x3_outlines.png)
+# MAGIC
+# MAGIC ![New Math Data Logo](https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction/blob/main/assets/NewMathDataLogo.png)
+# MAGIC
 # MAGIC
 # MAGIC ### Overview
 # MAGIC Wind power forecasting is essential for adequate power system stability, dispatching and cost control. Wind power is a favorable power source for green electricity generation and prediction is a crucial topic in reducing the energy lifecycle's unpredictability. Balancing energy supply and demand is critical to ensure that all energy produced from wind power is in deed actually being used. The goal of the Solution Accelerator is to provide dataset-based prediction tool for estimating wind power. Additionally, graph and tablular visulizations are provided to relay a better understanding of the wind and power production relationship and the algoristhms and methods used for forecasted predictions.
