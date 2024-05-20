@@ -1,10 +1,5 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC You may find this series of notebooks at https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction.git
-
-# COMMAND ----------
-
-# MAGIC %md
 # MAGIC ### Overview - Ingest Streamed Pipeline Data
 # MAGIC
 # MAGIC * Create a free user account with https://www.visualcrossing.com/ to object an api key and gain access to their api. 

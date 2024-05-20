@@ -1,10 +1,5 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC You may find this series of notebooks at https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction.git 
-
-# COMMAND ----------
-
-# MAGIC %md
 # MAGIC ### Overview - SCADA Data Ingestion and Dataset Analysis
 # MAGIC
 # MAGIC Wind turbines are equipped with electronic devices that are integrated with SCADA software. These devices establish remote connections to the SCADA system, enabling continuous data collection about the turbines. This data encompasses various details, including generated power, wind direction and speed, as well as date and time stamps.

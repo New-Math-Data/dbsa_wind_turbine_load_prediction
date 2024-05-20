@@ -1,6 +1,6 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC You may find this series of notebooks at https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction.git
+# MAGIC You can find this series of notebooks at https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction.git
 
 # COMMAND ----------
 
@@ -48,6 +48,7 @@
 # MAGIC
 # MAGIC ###### Wind Data
 # MAGIC   * The real-time forecasted wind speed and direction data is sourced from VisualCrossing. The VisualCrossing API provides weather forecasts for up to 15 days. This Solutions Accelerator utilizes their free plan, which includes limited features. https://www.visualcrossing.com/
+# MAGIC   * An example of the response of this api endpoint can be found here in the datasets directory: datasets/example_forecasted_weather_data.json
 # MAGIC
 # MAGIC ##### Assumptions
 # MAGIC * The turbine was not under maintenance on any given day or time.
@@ -69,12 +70,6 @@
 
 # MAGIC %md
 # MAGIC **Understand of the incoming SCADA Wind Turnine Dataset**
-
-# COMMAND ----------
-
-# First, lets look at the dataset format
-from pyspark.sql.functions import col
-
 
 # COMMAND ----------
 
