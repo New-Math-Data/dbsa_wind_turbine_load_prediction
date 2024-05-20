@@ -9,8 +9,8 @@
 # MAGIC ##### In this notebook you will:
 # MAGIC * Configure Databricks Repo GIT Environment
 # MAGIC * Configure the Solution Accelerator Environment
-# MAGIC * About Databricks and the PySpark Session
-# MAGIC
+# MAGIC * Check the version of the Databricks CLI
+# MAGIC * Learn about the Databricks and the PySpark Session
 
 # COMMAND ----------
 
@@ -36,7 +36,7 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC Databricks CLI versions 0.18 and below is the “legacy” CLI. If your version is legacy, we need to update the Databricks CLI by first uninstalling the legacy version
+# MAGIC Databricks CLI versions 0.18 and below is the “legacy” CLI. If your version is legacy, we need to update the Databricks CLI
 
 # COMMAND ----------
 
@@ -45,12 +45,8 @@
 
 # COMMAND ----------
 
-
-
-# COMMAND ----------
-
 # MAGIC %md
-# MAGIC ##### About Databricks and the PyDpark Session
+# MAGIC ##### About Databricks and the PySpark Session
 # MAGIC
 # MAGIC PySpark is pre-installed in Databricks notebook.
 # MAGIC
@@ -58,5 +54,5 @@
 # MAGIC
 # MAGIC In Databricks notebooks, the SparkSession is created for you (spark = SparkSession.builder.getOrCreate()), and stored in the variable `spark`.
 # MAGIC
-# MAGIC In this Databricks Wind Turbine Load Prediction Solution Accelerator notebook, ee will use the `spark` object to create DataFrames, register DataFrames as tables and execute SQL queries.
+# MAGIC In this Databricks Wind Turbine Load Prediction Solution Accelerator notebook, the `spark` object is used to create DataFrames, register DataFrames as tables and execute SQL queries.
 # MAGIC

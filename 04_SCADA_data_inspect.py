@@ -9,6 +9,7 @@
 # MAGIC
 # MAGIC ##### In this notebook we will:
 # MAGIC   * Look for zero, missing or null values in the data that will cause outliers or skew the data
+# MAGIC   * Display a Box plot and look for outliers for low voltage active power (lv_activepower_kw)
 # MAGIC   * Explore dataset based on `summarize` statistics
 # MAGIC   * Identify outliers in the dataset
 
@@ -113,7 +114,7 @@ boxplot_stats.show()
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC Let's find how many negative lv_activepower_kw values we have
+# MAGIC Let's find how many negative lv_activepower_kw values we have.
 
 # COMMAND ----------
 

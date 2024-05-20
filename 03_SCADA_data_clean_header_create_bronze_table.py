@@ -19,7 +19,7 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ##### First, run the SCADA_data_ingest notebook to get the DataFrame
+# MAGIC ##### First, run the SCADA_data_ingest notebook to get the perviously created Delta DataFrame
 
 # COMMAND ----------
 

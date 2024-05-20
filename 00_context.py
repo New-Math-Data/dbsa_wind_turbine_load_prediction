@@ -6,18 +6,20 @@
 
 # MAGIC %md
 # MAGIC
-# MAGIC ![New Math Data Logo](https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction/blob/main/assets/Logo_3x3_outlines.png)
+# MAGIC ![New Math Data Logo](https://wnu.7a7.myftpupload.com/wp-content/uploads/2022/03/newmathdatalogo.png) 
 # MAGIC
-# MAGIC ![New Math Data Logo](https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction/blob/main/assets/NewMathDataLogo.png)
+# MAGIC <br>
+# MAGIC <br>
 # MAGIC
+# MAGIC ### About This Series of Notebooks
+# MAGIC Wind power forecasting is essential for adequate power system stability, dispatching and cost control. Wind power is a favorable power source for green electricity generation and prediction is a crucial topic in reducing the energy lifecycle's unpredictability. Balancing energy supply and demand is critical to ensure that all energy produced from wind power is in deed actually being used. 
 # MAGIC
-# MAGIC ### Overview
-# MAGIC Wind power forecasting is essential for adequate power system stability, dispatching and cost control. Wind power is a favorable power source for green electricity generation and prediction is a crucial topic in reducing the energy lifecycle's unpredictability. Balancing energy supply and demand is critical to ensure that all energy produced from wind power is in deed actually being used. The goal of the Solution Accelerator is to provide dataset-based prediction tool for estimating wind power. Additionally, graph and tablular visulizations are provided to relay a better understanding of the wind and power production relationship and the algoristhms and methods used for forecasted predictions.
+# MAGIC The goal of the Wind Turbine Load Prediction Solution Accelerator is to provide a dataset-based prediction tool for estimating wind power. Additionally, graph and tablular visulizations are provided to relay a better understanding of the wind and power production relationship and the algoristhms and methods used for forecasted predictions.
 # MAGIC
-# MAGIC Using a public SCADA dataset that includes theoretical power, produced active power, wind direction, wind speed, month and hour, and generated turbine power is forecasted using machine learning algorithms.
+# MAGIC Using a public SCADA dataset that includes theoretical power, produced active power, wind direction, wind speed, month and hour, generated wind turbine power is predicted using machine learning algorithms.
 # MAGIC
-# MAGIC ##### About This Series of Notebooks
-# MAGIC * This series of notebooks is intended to help utility companies and wind farms correctly forecast the amount of load the farm can provide the utility.
+# MAGIC #### Overview
+# MAGIC * This series of notebooks is intended to help utility companies and wind farms correctly forecast the amount of load a wind farm can provide a utility company.
 # MAGIC
 # MAGIC In support of this goal, we will:
 # MAGIC
@@ -25,17 +27,15 @@
 # MAGIC
 # MAGIC * Design and build a graphical tool for analyzing dataset from wind turbines acquired by the SCADA system.
 # MAGIC
-# MAGIC * Design and develop machine learning based prediction models for wind energy generation utilizing past data-sets.
+# MAGIC * Design and develop a machine learning based prediction model, using Linear Regression, for wind energy generation utilizing past data-sets.
 # MAGIC
-# MAGIC * Evaluate and examine the prediction capabilities of the proposed machine learning models (Linear Regression and XGBoost), performance assessment metric Root Mean-Square Error (RMSE), and Coefficient of determination (R2) are used to compare the performance of the machine learning models.
+# MAGIC * Evaluate and examine the prediction capabilities of the proposed machine learning models using statistical based calculation, performance assessment metric Root Mean-Square Error (RMSE), and the Coefficient of determination (R2) are used to compare the performance of the model.
 # MAGIC
-# MAGIC * Create a pipeline for streaming forecassted wind speed and direction in near real-time and/or on an ad-hoc basis. This pipeline can then be used for managing tables for reporting, ad hoc queries, and/or decision support.
-# MAGIC
-# MAGIC * Create a dashboard for monitoring the predicted supplied load.
+# MAGIC * Create a pipeline for streaming forecassted wind speed and direction in near real-time and also on an ad-hoc basis. This pipeline can then be used for managing tables for reporting, ad hoc queries, and decision support.
 # MAGIC
 # MAGIC ##### Data used in this Solutions Accelerator
 # MAGIC   * Yalova, Turkey wind farm dataset from Kaggle
-# MAGIC   * Wind data from Tomorrow.ai https://app.tomorrow.io/home
+# MAGIC   * Forecasted weather data from VisualCrossing API Endpoint https://www.visualcrossing.com/
 # MAGIC
 # MAGIC ###### Turkey wind farm dataset from Kaggle
 # MAGIC Publicly available dataset gathered from Turkey's north eastern region at the Yalova, Marmara Bölgesi wind farm.
@@ -47,14 +47,21 @@
 # MAGIC   * Dataset source description: BERK ERISEN added the dataset to Kaggle 5 year ago, the country Turkey provided a year, 2018, of SCADA data from a Wind Farm
 # MAGIC
 # MAGIC ###### Wind Data
-# MAGIC   * Real time forecasted wind speed and direction is obtained from Weatherstack. Tomorrow.ai offers current weather data, forecasts, and historical weather data, (-7 days to 7 days). They have a free plan with limited features. https://docs.tomorrow.io/reference/intro/getting-started
+# MAGIC   * The real-time forecasted wind speed and direction data is sourced from VisualCrossing. The VisualCrossing API provides weather forecasts for up to 15 days. This Solutions Accelerator utilizes their free plan, which includes limited features. https://www.visualcrossing.com/
 # MAGIC
 # MAGIC ##### Assumptions
-# MAGIC * Turbine was not under maintenance on any given day and time
+# MAGIC * The turbine was not under maintenance on any given day or time.
 # MAGIC
 # MAGIC **Authors**
 # MAGIC - Ramona Niederhausern  [<rnieder@newmathdata.com>]
 # MAGIC - Traey Hatch [<thatch@newmathdata.com>]
+# MAGIC - Ryan Johnson [<rjohnson@newmathdata.com>]
+# MAGIC
+# MAGIC **Contact** \
+# MAGIC     New Math Data, LLC \
+# MAGIC     Phone: +1 (281)  817 - 6190 \
+# MAGIC     Email: info@newmathdata.com \
+# MAGIC     NewMathData.com
 # MAGIC
 # MAGIC ___
 

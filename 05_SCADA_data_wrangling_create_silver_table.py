@@ -87,9 +87,9 @@ display(df_convert_timestamp_to_epoch)
 # MAGIC
 # MAGIC These missing data points may be due to a varety of reasons, including, low wind speed compared to the turbine cut-in speed, malfunction of the turbine, system operational error, sensor malfunction or wind turbine maintenance. 
 # MAGIC
-# MAGIC Even though the mean and standard deviation are close in values, we shouldn't be skipping values when building our model. Missing values could raise the uncertainty of the prediction model, lets use the dataset's median to replace these outliers. 
+# MAGIC Although the mean and standard deviation are similar in value, we shouldn't disregard these missing datapoints when constructing our model. Missing values could could raise the uncertainty of the prediction model. Therefore, let's utilize the dataset's median to replace these anomalies.
 # MAGIC
-# MAGIC We can do this by using the linear interpolation approach to supplement missing values. Linear interpolation is based on data before and after the missing values, as well as theoretical information. Here "theoretical information" is the slope of the data to the nearest non-missing value.
+# MAGIC We can do this by using the linear interpolation approach to fill in the missing values. Linear interpolation is based on data before and after the missing values, as well as theoretical insights. In this context, "theoretical insights" refer to the slope of the data leading to the nearest non-missing value.
 
 # COMMAND ----------
 
@@ -139,7 +139,7 @@ display(df_added_missing_datetimes)
 # MAGIC
 # MAGIC Estimator: An algorithm which can be fit on a DataFrame to produce a Transformer. E.g., a learning algorithm is an Estimator which trains on a DataFrame and produces a model. It has a .fit() method because it learns (or "fits") parameters from your DataFrame.
 # MAGIC
-# MAGIC Let's use Databrick's ML API Estimator algorithm along with Transformer, to transform our DataFrame creating a good fit model for our data. 
+# MAGIC Let's use Databrick's ML API Estimator algorithm along with Transformer, to transform our DataFrame creating a fit model for our data. 
 # MAGIC
 
 # COMMAND ----------
