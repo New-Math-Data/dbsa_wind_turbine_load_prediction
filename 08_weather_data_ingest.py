@@ -27,9 +27,11 @@ import sys
 import json
 
 # Ingest forecasted weather data 
+API_KEY="5MKDL5XX9XK4RGDWC4B5MJQXE"
+
 try:
   # Forcasted 15 days of weather data
-  weather_results_json = urllib.request.urlopen("https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/yalova%2C%20turkey?unitGroup=metric&include=days%2Chours&key=5MKDL5XX9XK4RGDWC4B5MJQXE&contentType=json")
+  weather_results_json = urllib.request.urlopen(f"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/yalova%2C%20turkey?unitGroup=metric&include=days%2Chours&key={API_KEY}&contentType=json")
 
   # Parse the results as JSON
   forecasted_weather_data = json.load(weather_results_json)

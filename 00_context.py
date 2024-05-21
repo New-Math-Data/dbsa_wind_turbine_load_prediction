@@ -6,7 +6,10 @@
 
 # MAGIC %md
 # MAGIC
-# MAGIC ![New Math Data Logo](https://wnu.7a7.myftpupload.com/wp-content/uploads/2022/03/newmathdatalogo.png) 
+# MAGIC <br>
+# MAGIC <div>
+# MAGIC <img src="https://wnu.7a7.myftpupload.com/wp-content/uploads/2022/03/newmathdatalogo.png" width="400" alt="New Math Data Logo">
+# MAGIC </div>
 # MAGIC
 # MAGIC <br>
 # MAGIC <br>

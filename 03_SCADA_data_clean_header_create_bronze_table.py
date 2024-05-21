@@ -18,7 +18,7 @@
 
 # COMMAND ----------
 
-# MAGIC %run "/Workspace/Repos/rnieder@newmathdata.com/dbsa_wind_turbine_load_prediction/02_SCADA_data_ingest"
+# MAGIC %run "./02_SCADA_data_ingest"
 
 # COMMAND ----------
 

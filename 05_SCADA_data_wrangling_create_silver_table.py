@@ -3,10 +3,10 @@
 # MAGIC ### Overview - Data wrangling and create Silver Table
 # MAGIC Data Wrangling is a term used to describe the process of cleaning, transforming, and preparing raw data into a format suitable for analysis. Data wrangling involves various tasks such as handling missing values, restructuring data, merging datasets, and converting data types. It's a crucial step in the data analysis pipeline, ensuring that the data is accurate, complete, and well-organized before performing further analysis or modeling.
 # MAGIC
-# MAGIC In perpreation of creating our Silver table we will:
+# MAGIC ##### In this notebook, we will:
 # MAGIC
-# MAGIC * When the speed of wind is below the wind turbine's cut-in-speed, the turbine should produce zero active power, we will replace the wind turbine output power (`lv_activepower_kw`) values with Zero.
-# MAGIC * When the active power is more than the wind turbine's installed capacity, the rated installed capacity value is utilized instead.
+# MAGIC * We will replace the wind turbine output power (`lv_activepower_kw`) values with Zero. When the speed of wind is below the wind turbine's cut-in-speed, the turbine should produce zero active power.
+# MAGIC * We will utilized the rated installed capacity value in times when the active power is more than the wind turbine's installed capacity.
 # MAGIC * We will replace the `lv_activepower_kw` negative values with Zero. 
 # MAGIC * We will use linear interpolation to insert the interpolated values for `lv_activepower_kw`'s missing values. 
 
@@ -31,6 +31,11 @@ display(df_replaced_neg_values)
 # COMMAND ----------
 
 dbutils.data.summarize(df_replaced_neg_values)
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC
 
 # COMMAND ----------
 
@@ -120,7 +125,7 @@ display(df_all_timestamps)
 df_datetime_epoch_drop = df_all_timestamps.drop("datetime_epoch")
 
 # Calculate the missing datetimes using the new epoch timestamp column
-df_added_missing_datetimes = df_datetime_epoch_drop.withColumn("datetime",when(df_datetime_epoch_drop['datetime'].isNull(), from_unixtime(df_datetime_epoch_drop['timestamp'])).otherwise(df_datetime_epoch_drop['datetime']))
+df_added_missing_datetimes = df_datetime_epoch_drop.withColumn("datetime", when(df_datetime_epoch_drop['datetime'].isNull(), from_unixtime(df_datetime_epoch_drop['timestamp'])).otherwise(df_datetime_epoch_drop['datetime']))
 
 
 display(df_added_missing_datetimes)
