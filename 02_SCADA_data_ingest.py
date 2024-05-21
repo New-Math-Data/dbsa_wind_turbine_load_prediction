@@ -10,7 +10,9 @@
 # MAGIC
 # MAGIC ##### In this notebook you will:
 # MAGIC * Retrieve the SCADA dataset from the Databricks Respository and extract the file, saving it as a CSV file format.
-# MAGIC * Read the SCADA data into a DataFrame using the `Delta` format, ensuring ACID transactions and query capabilities.
+# MAGIC * Read the SCADA data into a DataFrame using the ^*`Delta` format, ensuring ACID transactions and query capabilities.
+# MAGIC
+# MAGIC ^*Note: "Delta" refers to Delta Lake, which is an open-source storage layer that brings ACID transactions, scalable metadata handling, and data versioning to processing engines.
 
 # COMMAND ----------
 

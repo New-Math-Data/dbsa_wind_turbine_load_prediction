@@ -63,3 +63,22 @@ display(forecasted_data)
 df_forecasted = spark.createDataFrame(forecasted_data).select("wind_speed_ms_hourly_avg")
 display(df_forecasted)
 
+# COMMAND ----------
+
+import matplotlib.pyplot as plt
+
+# Create DataFrame with wind speed data
+df_forecasted = spark.createDataFrame(forecasted_data).select("wind_speed_ms_hourly_avg")
+
+# Convert DataFrame to Pandas DataFrame for plotting
+pandas_df = df_forecasted.toPandas()
+
+# Plot histogram
+plt.figure(figsize=(10, 6))
+plt.hist(pandas_df["wind_speed_ms_hourly_avg"], bins=20, color='skyblue', edgecolor='black')
+plt.xlabel('Wind Speed (m/s)')
+plt.ylabel('Frequency')
+plt.title('Histogram of Wind Speeds')
+plt.grid(True)
+plt.show()
+

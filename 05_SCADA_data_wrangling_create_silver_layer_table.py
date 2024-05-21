@@ -1,13 +1,15 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC ### Overview - Data wrangling and create Silver Table
+# MAGIC ### Overview - Data wrangling and create Silver Layer Table
+# MAGIC
+# MAGIC The Silver layer is the curated data layer where data is cleaned, standardized, and transformed into a format suitable for analytics and reporting.
+# MAGIC
 # MAGIC Data Wrangling is a term used to describe the process of cleaning, transforming, and preparing raw data into a format suitable for analysis. Data wrangling involves various tasks such as handling missing values, restructuring data, merging datasets, and converting data types. It's a crucial step in the data analysis pipeline, ensuring that the data is accurate, complete, and well-organized before performing further analysis or modeling.
 # MAGIC
 # MAGIC ##### In this notebook, we will:
 # MAGIC
-# MAGIC * We will replace the wind turbine output power (`lv_activepower_kw`) values with Zero. When the speed of wind is below the wind turbine's cut-in-speed, the turbine should produce zero active power.
-# MAGIC * We will utilized the rated installed capacity value in times when the active power is more than the wind turbine's installed capacity.
-# MAGIC * We will replace the `lv_activepower_kw` negative values with Zero. 
+# MAGIC * We will replace the wind turbine output power (`lv_activepower_kw`) values with Zero when the speed of wind is below the wind turbine's cut-in-speed, the turbine should produce zero active power. This will also include replacing the `lv_activepower_kw` negative values with Zero. 
+# MAGIC * We will utilize the rated installed capacity value in times when the active power is more than the wind turbine's installed capacity.
 # MAGIC * We will use linear interpolation to insert the interpolated values for `lv_activepower_kw`'s missing values. 
 
 # COMMAND ----------
@@ -17,6 +19,11 @@ df_wind_farm_bronze = spark.sql("""SELECT * FROM wind_turbine_load_prediction.sc
 
 # Show the DataFrame
 display(df_wind_farm_bronze)
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ##### We will replace the wind turbine output power (lv_activepower_kw) values with Zero.
 
 # COMMAND ----------
 
@@ -35,7 +42,7 @@ dbutils.data.summarize(df_replaced_neg_values)
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC
+# MAGIC ##### We will utilize the rated installed capacity value in times when the active power is more than the wind turbine's installed capacity.
 
 # COMMAND ----------
 
@@ -53,7 +60,7 @@ display(df_wind_farm_bronze)
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC Now that all the negative values are removed from our dataset
+# MAGIC Now that all the negative values are removed from our dataset, let's look at the summarize statistics of our dataset again.
 
 # COMMAND ----------
 
@@ -146,7 +153,7 @@ display(df_added_missing_datetimes)
 
 from pyspark.ml.feature import Imputer
 
-# Let's look at the interpulated data using Databrick's Transformer and Estimator functions
+# Let's look at the interpolated data using Databrick's Transformer and Estimator functions
 
 # # Create an Imputer instance
 imputer = Imputer(strategy="median", inputCols=['lv_activepower_kw', 'wind_speed_ms', 'wind_direction', 'theoretical_power_curve_kwh'], outputCols=['lv_activepower_kw', 'wind_speed_ms', 'wind_direction', 'theoretical_power_curve_kwh'])
@@ -162,7 +169,7 @@ display(df_imputed)
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC Excellent, our data is now cleaned! Let's preserve this DataFrame into a Silver Delta Table, enabling us to commence model building. After cleaning, we now have 52559 datapoints.
+# MAGIC Excellent, our data is now cleaned! Let's preserve this Delta DataFrame into a Silver layer table, enabling us to commence model building. After cleaning, we now have 52559 datapoints.
 
 # COMMAND ----------
 
@@ -171,11 +178,11 @@ display(df_imputed)
 
 # COMMAND ----------
 
-# Create a permanent delta table (Silver table (cleaned data) by converting the Spark DataFrame we created eariler to a Delta Table
+# Create a permanent delta table (Silver layer table (cleaned data) by converting the Spark DataFrame we created eariler to a Delta Table
 
 spark.sql(f"USE wind_turbine_load_prediction")
 
-# There's is no need to check if the table exists becuause either way we would like to overide it as we may have made additional filters 
+# There is no need to check if the table exists becuause either way we would like to overide it as we may have made additional filters 
 
 # Override the table and register the DataFrame as a Delta table in the metastore
 df_imputed.write.format("delta").mode("overwrite").saveAsTable("scada_data_silver")

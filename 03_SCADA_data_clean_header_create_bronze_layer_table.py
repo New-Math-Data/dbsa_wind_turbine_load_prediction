@@ -1,15 +1,17 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC ### Overview - Remove Invalid Characters from the header and Create Bronze Delta Table
+# MAGIC ### Overview - Remove Invalid Characters from the header and Create Bronze Layer Delta Table
+# MAGIC
+# MAGIC The Bronze layer is the raw data layer where data is ingested into the data lake in a `Bronze Table` with minimal transformation.
 # MAGIC
 # MAGIC ##### In this notebook, we will:
 # MAGIC   * Clean the DataFrame by removing invalid characters from the header
 # MAGIC   * Examine statistical metrics utilizing Databricks' integrated commands `describe` and `summary` for potential future data manipulation.
 # MAGIC     * `describe`: Provides statistics including count, mean, standard deviation, minimum, and maximum.
 # MAGIC     * `summary`: describe + interquartile range (IQR)
-# MAGIC   * Create the Bronze Delta Table
+# MAGIC   * Create the Bronze Layer Delta Table
 # MAGIC     * Create a Schema/Database for the table's permanent residence
-# MAGIC     * Formulate and Integrate raw data into a Delta [Bronze] table for analysis
+# MAGIC     * Formulate and Integrate raw data into a Delta table for analysis
 
 # COMMAND ----------
 
@@ -86,9 +88,9 @@ spark.sql(f"USE wind_turbine_load_prediction")
 
 # COMMAND ----------
 
-# Structure and integrate raw data into a Delta [Bronze] table for analysis
+# Structure and integrate raw data into a Delta table for analysis
 
-# Establish a persistent delta table (Bronze table - raw data) by converting the previously created Spark DataFrame into a Delta Table.
+# Establish a persistent delta table (Bronze Layer table - raw data) by converting the previously created Spark DataFrame into a Delta Table.
 
 # Replace any previously existing table and register the DataFrame as a Delta table in the metastore.
 df_cleaned_header.write.format("delta").mode("overwrite").saveAsTable("scada_data_bronze")

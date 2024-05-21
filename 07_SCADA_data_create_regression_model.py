@@ -1,18 +1,11 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC ### Overview - Linear Regression
+# MAGIC ### Overview - Regression Model
 # MAGIC
 # MAGIC ##### In this notebook you will:
-# MAGIC * Create a linear regression model, to predict turbine load, using SparkML
 # MAGIC * Split the cleaned gold data, allocating 75% as our training set and 25% as our test set
-# MAGIC * Construct the model to predict power production based on wind speed and direction
+# MAGIC * Build a regression model to forecast power production using wind speed
 # MAGIC * Evaluate how well our model did by looking at the RMSE (Root Mean Squared Error) and R2 (Coefficient of Determination)
-# MAGIC
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ##### Create a linear regression model using SparkML
 
 # COMMAND ----------
 
@@ -42,7 +35,7 @@ display(df_train.select("lv_activepower_kw_hourly_sum", "wind_speed_ms_hourly_av
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ##### Construct the model to predict power production based on wind speed and direction
+# MAGIC ##### Build a regression model to forecast power production using wind speed
 
 # COMMAND ----------
 
@@ -50,17 +43,21 @@ from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.regression import LinearRegression
 from pyspark.sql.functions import col
 
-# If there are null values in the dataset, the VectorAssembler will encounter an error when trying to assemble the features: handleInvalid=["keep/skip"], `skip` will skip these null values, however, ideally the null values are handled by interpotation in the clean up (Silver) data stage." 
+# If there are null values in the dataset, the VectorAssembler will encounter an error when trying to assemble the features: handleInvalid=["keep/skip"], `skip` will skip these null values, however, ideally the null values are handled by interpotation in the clean up (Silver) data stage as we did in the Silver layer notebook. 
 
-vec_assembler = VectorAssembler(inputCols=['wind_speed_ms_hourly_avg'], outputCol='features', handleInvalid="keep")
+# Prepare features
+feature_columns = ['wind_speed_ms_hourly_avg']
+vec_assembler = VectorAssembler(inputCols=feature_columns, outputCol='features', handleInvalid="keep")
 
 df_train_vector = vec_assembler.transform(df_train)
+
+# Create an instance of LinearRegression
+lr = LinearRegression(featuresCol='features', labelCol='label')
 
 df_trained_data = df_train_vector.withColumn('label', col('lv_activepower_kw_hourly_sum')).select('features','label')
 display(df_trained_data)
 
-lr = LinearRegression(featuresCol='features', labelCol='label')
-
+# Train the model
 lr_model = lr.fit(df_trained_data)
 
 # COMMAND ----------
@@ -81,6 +78,7 @@ from pyspark.sql.functions import avg, col
 
 df_test_vector = vec_assembler.transform(df_test)
 df_test_vec = df_test_vector.withColumn('label', col('lv_activepower_kw_hourly_sum')).select('features','label')
+
 display(df_test_vec)
 
 df_pred = lr_model.transform(df_test_vec)
@@ -110,6 +108,7 @@ print(f"R2 is {r2}")
 for col, coef in zip(vec_assembler.getInputCols(), lr_model.coefficients):
     print(col, coef)
 
+# Get the slope (m) and intercept (b)
 m = lr_model.coefficients[0]
 b = lr_model.intercept
 
