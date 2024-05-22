@@ -60,8 +60,15 @@ for day in forecasted_weather_data["days"]:
 
 display(forecasted_data)
 
+# We do not need wind direction for our model
 df_forecasted = spark.createDataFrame(forecasted_data).select("wind_speed_ms_hourly_avg")
 display(df_forecasted)
+
+# Filter out wind speeds that are lower than the turbine cut-in speed and higher than the turbine shut-off speed.
+df_forecasted_filtered = df_forecasted.filter(
+        (df_forecasted["wind_speed_ms_hourly_avg"] >= 3) &
+        (df_forecasted["wind_speed_ms_hourly_avg"] <= 25)
+    ) 
 
 # COMMAND ----------
 

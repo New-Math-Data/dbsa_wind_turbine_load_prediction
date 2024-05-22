@@ -4,8 +4,10 @@
 # MAGIC
 # MAGIC ##### In this notebook you will:
 # MAGIC * Split the cleaned gold data, allocating 75% as our training set and 25% as our test set
-# MAGIC * Build a regression model to forecast power production using wind speed
-# MAGIC * Evaluate how well our model did by looking at the RMSE (Root Mean Squared Error) and R2 (Coefficient of Determination)
+# MAGIC * Build a Lienar Regression model to forecast power production using wind speed
+# MAGIC * Evaluate how well our Lienar Regression model did by looking at the RMSE (Root Mean Squared Error) and R2 (Coefficient of Determination)
+# MAGIC * Build a Random Forest Regression model to forecast power production using wind speed
+# MAGIC * Evaluate how well our Random Forest Regression model did by looking at the RMSE (Root Mean Squared Error) and R2 (Coefficient of Determination)
 
 # COMMAND ----------
 
@@ -113,3 +115,59 @@ m = lr_model.coefficients[0]
 b = lr_model.intercept
 
 print(f"linear regression line is y = {m:.2f}x + {b:.2f}")
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ##### Build a Random Forest Regression
+
+# COMMAND ----------
+
+from pyspark.ml.regression import RandomForestRegressor
+from pyspark.ml.evaluation import RegressionEvaluator
+from pyspark.sql.functions import avg, col
+
+# Prepare features
+feature_columns = ['wind_speed_ms_hourly_avg']
+vec_assembler = VectorAssembler(inputCols=feature_columns, outputCol='features', handleInvalid="keep")
+
+df_train_vector = vec_assembler.transform(df_train)
+
+# Create an instance of Random Forest Regression
+rf = RandomForestRegressor(featuresCol="features", labelCol="label", numTrees=100)
+
+df_trained_data = df_train_vector.withColumn('label', col('lv_activepower_kw_hourly_sum')).select('features','label')
+
+display(df_trained_data)
+
+# Train the model
+rf_model = rf.fit(df_trained_data)
+
+df_test_vector = vec_assembler.transform(df_test)
+
+df_test_vec = df_test_vector.withColumn('label', col('lv_activepower_kw_hourly_sum')).select('features','label')
+
+display(df_test_vec)
+
+df_pred = rf_model.transform(df_test_vec)
+display(df_pred)
+
+# Calculate the average of the "label" column in the DataFrame with predictions
+df_average_label_pred = df_pred.agg(avg(col("label"))).collect()[0][0]
+print("Average label with predictions:", df_average_label_pred)
+
+regression_evaluator = RegressionEvaluator(predictionCol="prediction", labelCol="label", metricName="rmse")
+
+# Ideally RMSE is under the average of the predicted column (active power)
+rmse = regression_evaluator.evaluate(df_pred)
+# Ideally R^2 should be close to one, indicating a better fit of the model to the data
+r2 = regression_evaluator.setMetricName("r2").evaluate(df_pred)
+
+print(f"Random Forest Regression RMSE is {rmse}")
+print(f"Random Forest Regression R^2 is {r2}")
+
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC #### Random Forest Regression model has a higher R^2, we will use this model over the Linear Regression model
