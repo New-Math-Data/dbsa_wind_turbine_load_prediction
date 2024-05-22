@@ -31,7 +31,7 @@
 # MAGIC
 # MAGIC * Design and build a graphical tool for analyzing dataset from wind turbines acquired by the SCADA system.
 # MAGIC
-# MAGIC * Design and develop a machine learning based prediction model, using Linear Regression, for wind energy generation utilizing past data-sets.
+# MAGIC * Design and develop a machine learning based prediction model, using both Linear and Random Forest Regression, for wind energy generation utilizing past data-sets.
 # MAGIC
 # MAGIC * Evaluate and examine the prediction capabilities of the proposed machine learning models using statistical based calculation, performance assessment metric Root Mean-Square Error (RMSE), and the Coefficient of determination (R2) are used to compare the performance of the model.
 # MAGIC
