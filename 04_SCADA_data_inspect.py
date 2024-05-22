@@ -1,14 +1,10 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC You may find this series of notebooks at https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction.git
-
-# COMMAND ----------
-
-# MAGIC %md
 # MAGIC ### Overview - Data Inspection
 # MAGIC
 # MAGIC ##### In this notebook we will:
 # MAGIC   * Look for zero, missing or null values in the data that will cause outliers or skew the data
+# MAGIC   * Display a Box plot and look for outliers for low voltage active power (lv_activepower_kw)
 # MAGIC   * Explore dataset based on `summarize` statistics
 # MAGIC   * Identify outliers in the dataset
 
@@ -70,7 +66,7 @@ boxplot_stats.show()
 
 # MAGIC %sql
 # MAGIC with ws as (SELECT ROUND(wind_speed_ms, 0) AS wind_speed_ms_rounded_value FROM wind_turbine_load_prediction.scada_data_bronze)
-# MAGIC select wind_speed_ms_rounded_value, count(*) as num from ws
+# MAGIC select wind_speed_ms_rounded_value, count(*) as num_wind_speed_at_value from ws
 # MAGIC group by wind_speed_ms_rounded_value
 # MAGIC order by wind_speed_ms_rounded_value asc
 
@@ -113,7 +109,7 @@ boxplot_stats.show()
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC Let's find how many negative lv_activepower_kw values we have
+# MAGIC Let's find how many negative lv_activepower_kw values we have.
 
 # COMMAND ----------
 
@@ -165,36 +161,13 @@ dbutils.data.summarize(df_wind_farm_bronze)
 import matplotlib.pyplot as plt
 
 # remove values where the wind speed is less than 3 meters per second and above 25 meters per second
-df_wind_farm_histogram = spark.sql(
-    """
-    -- get lv_active_power_kw as a sub query, between a range of window speed
-    with lv as (
-      SELECT lv_activepower_kw FROM wind_turbine_load_prediction.scada_data_bronze where wind_speed_ms > 2 and wind_speed_ms < 26
-    ),
-    -- Generate the Historgram Bins
-    hist_data as (SELECT
-      explode(histogram_numeric(lv_activepower_kw, 40)) as rw
-    FROM
-      lv
-    )
-    -- Format the X and Y into an columnar format 
-    select hd.rw.x as x, hd.rw.y as y from hist_data hd
-    """)
 
-df_wind_farm_histogram.show()
+df_active_power = spark.sql("SELECT lv_activepower_kw FROM wind_turbine_load_prediction.scada_data_bronze where wind_speed_ms > 2 and wind_speed_ms < 26")
 
-# Use dataframe to plot
-pandas_df = df_wind_farm_histogram.toPandas()
+pandas_df = df_active_power.toPandas()
 
-# Plot the graph
-plt.figure(figsize=(12, 6))
-plt.plot(pandas_df["x"], pandas_df["y"], marker='o', linestyle='-')
-plt.title("Graph of wind_speed_ms vs lv_activepower_kw")
-plt.xlabel("wind_speed_ms")
-plt.ylabel("lv_activepower_kw")
-plt.grid(True)
-plt.show()
-
+# Plot a histogram for a specific column
+pandas_df['lv_activepower_kw'].hist()
 
 # COMMAND ----------
 

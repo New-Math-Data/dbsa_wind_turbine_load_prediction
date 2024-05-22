@@ -1,14 +1,12 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC You may find this series of notebooks at https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction.git
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ### Overview - Create Structured Gold Table
-# MAGIC Gold tables have a well-defined schema that accurately represents the data. Our data needs to adheres to predefined conventional datapoint standards.
+# MAGIC ### Overview - Create Structured Gold Layer Table
 # MAGIC
-# MAGIC Despite our awareness that the turbine usually doesn't operate when the wind speed is below 3 meters per second (the estimated manufacturer cut-in speed) or exceeds 25 meters per second, we'll exclude these values from the table for model fitting purposes.
+# MAGIC The Gold layer is the refined data layer where high-quality, business-ready data is stored for use in analytics, reporting, and decision-making.
+# MAGIC
+# MAGIC The Gold layer table will feature a clearly defined schema that precisely reflects the data and conforms to established standards for Wind Turbines' data points.
+# MAGIC
+# MAGIC Although our dataset does have data values showing operation when the wind speed is below 3 meters per second (the estimated manufacturer cut-in speed) or above 25 meters per second, these values should not be included in the Gold layer table for model fitting purposes.
 # MAGIC
 # MAGIC ##### In this notebook you will:
 # MAGIC * Define datapoints to have a wind speed between 3 meters per second and 25 meters per second.
@@ -25,7 +23,7 @@ display(df_scada_data_silver)
 
 from pyspark.sql.functions import col, window, sum, avg
 
-# Sum by hour to do the association with the forecasted weather, which is hourly
+# Sum by hour to do the association with the forecasted weather (API response in future notebook), which is hourly
 
 # Group data into hourly windows and calculate the sum of lv_activepower_kw
 df_hourly = df_scada_data_silver.groupBy(window("datetime", "1 hour")).agg(
@@ -72,7 +70,7 @@ plt.show()
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ##### Let's create the gold table
+# MAGIC ##### Let's create the Gold layer table
 
 # COMMAND ----------
 
@@ -81,7 +79,7 @@ plt.show()
 
 # COMMAND ----------
 
-# Create a permanent delta table (Gold table (high quality structured data) by converting the Spark DataFrame we created eariler to a Delta Table
+# Create a permanent delta table (Gold layer table (high quality structured data) by converting the Spark DataFrame we created eariler to a Delta Table
 spark.sql(f"USE wind_turbine_load_prediction")
 
 # While the theoretical_power_curve_kwh is useful for comparing against forecasted values, it's not required for our model

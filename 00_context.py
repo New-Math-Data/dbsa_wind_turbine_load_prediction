@@ -1,21 +1,29 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC You may find this series of notebooks at https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction.git
+# MAGIC You can find this series of notebooks at https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction.git
 
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC <div >
-# MAGIC   <img src="/Workspace/Repos/rnieder@newmathdata.com/dbsa_wind_turbine_load_prediction/assets/Logo_3x3_outlines.png">
+# MAGIC
+# MAGIC <div style="text-align: center">
+# MAGIC <img src="https://wnu.7a7.myftpupload.com/wp-content/uploads/2022/03/newmathdatalogo.png" width="400" alt="New Math Data Logo">
 # MAGIC </div>
+# MAGIC <br>
+# MAGIC <br>
 # MAGIC
-# MAGIC ### Overview
-# MAGIC Wind power forecasting is essential for adequate power system stability, dispatching and cost control. Wind power is a favorable power source for green electricity generation and prediction is a crucial topic in reducing the energy lifecycle's unpredictability. Balancing energy supply and demand is critical to ensure that all energy produced from wind power is in deed actually being used. The goal of the Solution Accelerator is to provide dataset-based prediction tool for estimating wind power. Additionally, graph and tablular visulizations are provided to relay a better understanding of the wind and power production relationship and the algoristhms and methods used for forecasted predictions.
+# MAGIC ## Databricks Wind Turbine Load Prediction Solutions Accelerator
 # MAGIC
-# MAGIC Using a public SCADA dataset that includes theoretical power, produced active power, wind direction, wind speed, month and hour, and generated turbine power is forecasted using machine learning algorithms.
 # MAGIC
-# MAGIC ##### About This Series of Notebooks
-# MAGIC * This series of notebooks is intended to help utility companies and wind farms correctly forecast the amount of load the farm can provide the utility.
+# MAGIC ### About This Series of Notebooks
+# MAGIC Wind power forecasting is essential for adequate power system stability, dispatching and cost control. Wind power is a favorable power source for green electricity generation and prediction is a crucial topic in reducing the energy lifecycle's unpredictability. Balancing energy supply and demand is critical to ensure that all energy produced from wind power is in deed actually being used. 
+# MAGIC
+# MAGIC The goal of the Wind Turbine Load Prediction Solution Accelerator is to provide a dataset-based prediction tool for estimating wind power. Additionally, graph and tablular visulizations are provided to relay a better understanding of the wind and power production relationship and the algoristhms and methods used for forecasted predictions.
+# MAGIC
+# MAGIC Using a public Supervisory Control and Data Acquisition (SCADA) dataset that includes theoretical power, produced active power, wind direction, wind speed, month and hour, generated wind turbine power is predicted using machine learning algorithms.
+# MAGIC
+# MAGIC #### Overview
+# MAGIC * This series of notebooks is intended to help utility companies and wind farms correctly forecast the amount of load a wind farm can provide a utility company.
 # MAGIC
 # MAGIC In support of this goal, we will:
 # MAGIC
@@ -23,17 +31,15 @@
 # MAGIC
 # MAGIC * Design and build a graphical tool for analyzing dataset from wind turbines acquired by the SCADA system.
 # MAGIC
-# MAGIC * Design and develop machine learning based prediction models for wind energy generation utilizing past data-sets.
+# MAGIC * Design and develop a machine learning based prediction model, using both Linear and Random Forest Regression, for wind energy generation utilizing past data-sets.
 # MAGIC
-# MAGIC * Evaluate and examine the prediction capabilities of the proposed machine learning models (Linear Regression and XGBoost), performance assessment metric Root Mean-Square Error (RMSE), and Coefficient of determination (R2) are used to compare the performance of the machine learning models.
+# MAGIC * Evaluate and examine the prediction capabilities of the proposed machine learning models using statistical based calculation, performance assessment metric Root Mean-Square Error (RMSE), and the Coefficient of determination (R2) are used to compare the performance of the model.
 # MAGIC
-# MAGIC * Create a pipeline for streaming forecassted wind speed and direction in near real-time and/or on an ad-hoc basis. This pipeline can then be used for managing tables for reporting, ad hoc queries, and/or decision support.
+# MAGIC * Create a pipeline for streaming forecasted wind speed and direction in near real-time and also on an ad-hoc basis. This pipeline can then be used for managing tables for reporting, ad hoc queries, and decision support.
 # MAGIC
-# MAGIC * Create a dashboard for monitoring the predicted supplied load.
-# MAGIC
-# MAGIC ##### Data used in this Solutions Accelerator
+# MAGIC ##### Data used in this Wind Turbine Load Prediction Solutions Accelerator
 # MAGIC   * Yalova, Turkey wind farm dataset from Kaggle
-# MAGIC   * Wind data from Tomorrow.ai https://app.tomorrow.io/home
+# MAGIC   * Forecasted weather data from VisualCrossing API Endpoint https://www.visualcrossing.com/
 # MAGIC
 # MAGIC ###### Turkey wind farm dataset from Kaggle
 # MAGIC Publicly available dataset gathered from Turkey's north eastern region at the Yalova, Marmara Bölgesi wind farm.
@@ -45,14 +51,25 @@
 # MAGIC   * Dataset source description: BERK ERISEN added the dataset to Kaggle 5 year ago, the country Turkey provided a year, 2018, of SCADA data from a Wind Farm
 # MAGIC
 # MAGIC ###### Wind Data
-# MAGIC   * Real time forecasted wind speed and direction is obtained from Weatherstack. Tomorrow.ai offers current weather data, forecasts, and historical weather data, (-7 days to 7 days). They have a free plan with limited features. https://docs.tomorrow.io/reference/intro/getting-started
+# MAGIC   * The real-time forecasted wind speed and direction data is sourced from VisualCrossing. The VisualCrossing API provides weather forecasts for up to 15 days. This Solutions Accelerator utilizes their free plan, which includes limited features. https://www.visualcrossing.com/
+# MAGIC   * An example of the response of this api endpoint can be found here in the datasets directory: datasets/example_forecasted_weather_data.json
 # MAGIC
 # MAGIC ##### Assumptions
-# MAGIC * Turbine was not under maintenance on any given day and time
+# MAGIC * The turbine was not under maintenance on any given day or time.
+# MAGIC
+# MAGIC ##### Findings
+# MAGIC * Turbines automatically adjust to face the optimal wind direction.
 # MAGIC
 # MAGIC **Authors**
 # MAGIC - Ramona Niederhausern  [<rnieder@newmathdata.com>]
 # MAGIC - Traey Hatch [<thatch@newmathdata.com>]
+# MAGIC - Ryan Johnson [<rjohnson@newmathdata.com>]
+# MAGIC
+# MAGIC **Contact** \
+# MAGIC     New Math Data, LLC \
+# MAGIC     Phone: +1 (281)  817 - 6190 \
+# MAGIC     Email: info@newmathdata.com \
+# MAGIC     NewMathData.com
 # MAGIC
 # MAGIC ___
 
@@ -63,19 +80,13 @@
 
 # COMMAND ----------
 
-# First, lets look at the dataset format
-from pyspark.sql.functions import col
-
-
-# COMMAND ----------
-
 # MAGIC %md
 # MAGIC ###### SCADA Data from Yalova Wind Farm in the Northern Region of Turkey
 # MAGIC | field | type | description |
 # MAGIC |---|---|---|
 # MAGIC | Theoretical Power Curve (KWh) | double | Theoretical maximum power output of the wind turbine under ideal conditions. | Measured in kW.
 # MAGIC | LV ActivePower (kW) | double | The low voltage active power produced by a turbine refers to the actual electrical power output generated by the turbine. |
-# MAGIC | Wind Direction (°) | double | Wind direction refers to the direction from which the wind is blowing. Measured in degrees Celcius. |
+# MAGIC | Wind Direction (°) | double | Wind direction refers to the direction from which the wind is blowing. Measured in Polar degrees. |
 # MAGIC | Wind Speed (m/s) | double | Wind speed is the rate at which air moves horizontally past a specific point on the Earth's surface. Measured in meters per second. |
 # MAGIC | Date/Time| Datetime | ISO 8601 format for representing date and time is "YYYY-MM-DDTHH:MM:SS" where: YYYY represents the year, MM represents the month, DD represents the day, T is a separator indicating the start of the time part, HH represents the hour (in 24-hour format), MM represents the minute, SS represents the second. For example: "2024-05-08T14:30:00" represents May 8th, 2024, at 2:30 PM. |
 

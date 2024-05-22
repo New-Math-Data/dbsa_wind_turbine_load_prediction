@@ -1,18 +1,15 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC You may find this series of notebooks at https://github.com/New-Math-Data/dbsa_wind_turbine_load_prediction.git
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ### Overview - Data wrangling and create Silver Table
+# MAGIC ### Overview - Data wrangling and create Silver Layer Table
+# MAGIC
+# MAGIC The Silver layer is the curated data layer where data is cleaned, standardized, and transformed into a format suitable for analytics and reporting.
+# MAGIC
 # MAGIC Data Wrangling is a term used to describe the process of cleaning, transforming, and preparing raw data into a format suitable for analysis. Data wrangling involves various tasks such as handling missing values, restructuring data, merging datasets, and converting data types. It's a crucial step in the data analysis pipeline, ensuring that the data is accurate, complete, and well-organized before performing further analysis or modeling.
 # MAGIC
-# MAGIC In perpreation of creating our Silver table we will:
+# MAGIC ##### In this notebook, we will:
 # MAGIC
-# MAGIC * When the speed of wind is below the wind turbine's cut-in-speed, the turbine should produce zero active power, we will replace the wind turbine output power (`lv_activepower_kw`) values with Zero.
-# MAGIC * When the active power is more than the wind turbine's installed capacity, the rated installed capacity value is utilized instead.
-# MAGIC * We will replace the `lv_activepower_kw` negative values with Zero. 
+# MAGIC * We will replace the wind turbine output power (`lv_activepower_kw`) values with Zero when the speed of wind is below the wind turbine's cut-in-speed, the turbine should produce zero active power. This will also include replacing the `lv_activepower_kw` negative values with Zero. 
+# MAGIC * We will utilize the rated installed capacity value in times when the active power is more than the wind turbine's installed capacity.
 # MAGIC * We will use linear interpolation to insert the interpolated values for `lv_activepower_kw`'s missing values. 
 
 # COMMAND ----------
@@ -22,6 +19,11 @@ df_wind_farm_bronze = spark.sql("""SELECT * FROM wind_turbine_load_prediction.sc
 
 # Show the DataFrame
 display(df_wind_farm_bronze)
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ##### We will replace the wind turbine output power (lv_activepower_kw) values with Zero.
 
 # COMMAND ----------
 
@@ -39,6 +41,11 @@ dbutils.data.summarize(df_replaced_neg_values)
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC ##### We will utilize the rated installed capacity value in times when the active power is more than the wind turbine's installed capacity.
+
+# COMMAND ----------
+
 from pyspark.sql.functions import col, when
 
 # When the active power is more than the wind turbine's installed capacity, the rated installed capacity value is utilized instead
@@ -53,7 +60,7 @@ display(df_wind_farm_bronze)
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC Now that all the negative values are removed from our dataset
+# MAGIC Now that all the negative values are removed from our dataset, let's look at the summarize statistics of our dataset again.
 
 # COMMAND ----------
 
@@ -87,9 +94,9 @@ display(df_convert_timestamp_to_epoch)
 # MAGIC
 # MAGIC These missing data points may be due to a varety of reasons, including, low wind speed compared to the turbine cut-in speed, malfunction of the turbine, system operational error, sensor malfunction or wind turbine maintenance. 
 # MAGIC
-# MAGIC Even though the mean and standard deviation are close in values, we shouldn't be skipping values when building our model. Missing values could raise the uncertainty of the prediction model, lets use the dataset's median to replace these outliers. 
+# MAGIC Although the mean and standard deviation are similar in value, we shouldn't disregard these missing datapoints when constructing our model. Missing values could could raise the uncertainty of the prediction model. Therefore, let's utilize the dataset's median to replace these anomalies.
 # MAGIC
-# MAGIC We can do this by using the linear interpolation approach to supplement missing values. Linear interpolation is based on data before and after the missing values, as well as theoretical information. Here "theoretical information" is the slope of the data to the nearest non-missing value.
+# MAGIC We can do this by using the linear interpolation approach to fill in the missing values. Linear interpolation is based on data before and after the missing values, as well as theoretical insights. In this context, "theoretical insights" refer to the slope of the data leading to the nearest non-missing value.
 
 # COMMAND ----------
 
@@ -125,7 +132,7 @@ display(df_all_timestamps)
 df_datetime_epoch_drop = df_all_timestamps.drop("datetime_epoch")
 
 # Calculate the missing datetimes using the new epoch timestamp column
-df_added_missing_datetimes = df_datetime_epoch_drop.withColumn("datetime",when(df_datetime_epoch_drop['datetime'].isNull(), from_unixtime(df_datetime_epoch_drop['timestamp'])).otherwise(df_datetime_epoch_drop['datetime']))
+df_added_missing_datetimes = df_datetime_epoch_drop.withColumn("datetime", when(df_datetime_epoch_drop['datetime'].isNull(), from_unixtime(df_datetime_epoch_drop['timestamp'])).otherwise(df_datetime_epoch_drop['datetime']))
 
 
 display(df_added_missing_datetimes)
@@ -133,20 +140,20 @@ display(df_added_missing_datetimes)
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ##### Databrick's ML API Transformer and Estimator can do the linear interpolation for us
+# MAGIC ##### Databrick's ML API Transformer and Estimator classes can do the linear interpolation for us
 # MAGIC
 # MAGIC Transformer: Transforms one DataFrame into another DataFrame. It accepts a DataFrame as input, and returns a new DataFrame with one or more columns appended to it. Transformers do not learn any parameters from your data and simply apply rule-based transformations. It has a .transform() method.
 # MAGIC
 # MAGIC Estimator: An algorithm which can be fit on a DataFrame to produce a Transformer. E.g., a learning algorithm is an Estimator which trains on a DataFrame and produces a model. It has a .fit() method because it learns (or "fits") parameters from your DataFrame.
 # MAGIC
-# MAGIC Let's use Databrick's ML API Estimator algorithm along with Transformer, to transform our DataFrame creating a good fit model for our data. 
+# MAGIC Let's use Databrick's ML API Estimator algorithm along with Transformer, to transform our DataFrame creating a fit model for our data. 
 # MAGIC
 
 # COMMAND ----------
 
 from pyspark.ml.feature import Imputer
 
-# Let's look at the interpulated data using Databrick's Transformer and Estimator functions
+# Let's look at the interpolated data using Databrick's Transformer and Estimator functions
 
 # # Create an Imputer instance
 imputer = Imputer(strategy="median", inputCols=['lv_activepower_kw', 'wind_speed_ms', 'wind_direction', 'theoretical_power_curve_kwh'], outputCols=['lv_activepower_kw', 'wind_speed_ms', 'wind_direction', 'theoretical_power_curve_kwh'])
@@ -162,7 +169,7 @@ display(df_imputed)
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC Excellent, our data is now cleaned! Let's preserve this DataFrame into a Silver Delta Table, enabling us to commence model building. After cleaning, we now have 52559 datapoints.
+# MAGIC Excellent, our data is now cleaned! Let's preserve this Delta DataFrame into a Silver layer table, enabling us to commence model building. After cleaning, we now have 52559 datapoints.
 
 # COMMAND ----------
 
@@ -171,11 +178,11 @@ display(df_imputed)
 
 # COMMAND ----------
 
-# Create a permanent delta table (Silver table (cleaned data) by converting the Spark DataFrame we created eariler to a Delta Table
+# Create a permanent delta table (Silver layer table (cleaned data) by converting the Spark DataFrame we created eariler to a Delta Table
 
 spark.sql(f"USE wind_turbine_load_prediction")
 
-# There's is no need to check if the table exists becuause either way we would like to overide it as we may have made additional filters 
+# There is no need to check if the table exists becuause either way we would like to overide it as we may have made additional filters 
 
 # Override the table and register the DataFrame as a Delta table in the metastore
 df_imputed.write.format("delta").mode("overwrite").saveAsTable("scada_data_silver")
